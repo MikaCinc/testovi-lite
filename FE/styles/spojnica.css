@@ -1,10 +1,98 @@
-.row {
+#spojnicaContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    justify-content: space-between;
-    border: 1px solid var(--primary);
-    margin-bottom: 20px;
+    flex-direction: column;
 }
 
 .spojnicaQuestions {
-    width: 500px;
+    max-width: 500px;
+    border: 1px solid var(--primary);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.spojnicaQuestionsRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.spojnicaQuestionsRow:last-child {
+    margin-bottom: 0px !important;
+}
+
+.spojnicaQuestionButton {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed var(--primary);
+    border-radius: 5px;
+    /* background-color: var(--primary); */
+    color: var(--textColor);
+    font-size: 14px;
+    font-weight: bold;
+    /* cursor: pointer; */
+    margin-right: 20px;
+    user-select: none;
+    font-size: 20px;
+    padding: 15px;
+}
+
+.spojnicaAnswerButton {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--secondary);
+    border-radius: 5px;
+    /* background-color: var(--primary); */
+    color: var(--textColor);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    font-size: 20px;
+    padding: 15px;
+}
+
+.spojnicaAnswerButton:hover {
+    background-color: var(--secondary);
+    transition-duration: 0.4s;
+}
+
+.currentQuestion {
+    background-color: var(--current) !important;
+    /* border: 1px solid var(--primary) !important;
+    color: var(--primary) !important; */
+}
+
+.correctQuestion {
+    background-color: var(--primary) !important;
+}
+
+.incorrectQuestion {
+    border: 1px dashed var(--error) !important;
+}
+
+.correctAnswer {
+    background-color: var(--secondary) !important;
+    cursor: block !important;
+}
+
+.addNewButton {
+    margin-top: 20px;
+}
+
+#newQuestionContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }

@@ -4,16 +4,61 @@
 :root {
     --primary: #007fd4;
     --secondary: orangered;
+    --textColor: white;
+    --current: green;
+    --error: red;
+
+    --premiumDark: linear-gradient(to right, #434343 0%, black 100%);
 }
 
 * {
     font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.6px;
+    /*  @todo */
+
+    color: var(--textColor);
 }
 
 body {
-    background-color: whitesmoke;
+    height: 100vh;
+    /* background-color: darkgray; */
+
+    /* Sick carbon */
+    /* background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255, 255, 255, 0.40) 0%, rgba(0, 0, 0, 0.25) 200%);
+    background-blend-mode: multiply; */
+
+    background-color: black;
 }
 
 h1 {
     color: var(--primary);
+}
+
+.button {
+    padding: 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.button:hover {
+    background-color: var(--primary);
+    color: var(--textColor);
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+    color: var(--primary);
+    background-color: transparent;
+    transition-duration: 0.4s;
 }
