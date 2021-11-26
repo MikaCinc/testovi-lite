@@ -41,6 +41,7 @@
     user-select: none;
     font-size: 20px;
     padding: 15px;
+    transition-duration: 0.4s;
 }
 
 .spojnicaAnswerButton {
@@ -68,6 +69,7 @@
 
 .currentQuestion {
     background-color: var(--current) !important;
+    color: var(--textColorInverted) !important;
     /* border: 1px solid var(--primary) !important;
     color: var(--primary) !important; */
 }

@@ -9,6 +9,7 @@ class Spojnica {
       id: question.id,
       answer: question.answer,
     }));
+    this.tags = spojnica.tags;
 
     this.completed = []; // id array of completed questions
     this.currentIndex = 0; // index of current question
@@ -108,6 +109,20 @@ class Spojnica {
     spojnicaContainer.appendChild(newContainer);
   }
 
+  renderTags() {
+    const spojnicaContainer = document.getElementById("spojnicaContainer");
+    const tagsContainer = document.createElement("div");
+    tagsContainer.id = "tagsContainer";
+
+    this.tags.forEach((tag) => {
+      const tagEl = document.createElement("p");
+      tagEl.className = "tag";
+      tagEl.innerText = tag;
+      tagsContainer.appendChild(tagEl);
+    });
+    spojnicaContainer.appendChild(tagsContainer);
+  }
+
   render() {
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content
@@ -115,6 +130,8 @@ class Spojnica {
     const spojnicaTitle = document.createElement("h2");
     spojnicaTitle.innerText = this.title;
     spojnicaContainer.appendChild(spojnicaTitle);
+
+    this.renderTags();
 
     const spojnicaQuestions = document.createElement("div");
     spojnicaQuestions.classList.add("spojnicaQuestions");

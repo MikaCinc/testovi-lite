@@ -1,9 +1,11 @@
 // import { shuffleArray } from "./common.js";
 import Spojnica from "./spojnica.js";
+import Home from "./home.js";
 
 let mockSpojnica = {
   id: "s-1",
   title: "Glavni gradovi",
+  tags: ["Geografija", "Gradovi", "Megalopolisi"],
   questions: [
     {
       id: "1",
@@ -31,6 +33,12 @@ let mockSpojnica = {
       answer: "Berlin",
     },
   ],
+};
+
+let state = {
+  spojnice: [{ ...mockSpojnica }],
+  pitanja: [],
+  tagovi: [],
 };
 
 window.onload = () => {

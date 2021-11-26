@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 @import "spojnica.css";
+@import "home.css";
 
 :root {
     --primary: #007fd4;
     --secondary: orangered;
-    --textColor: white;
-    --current: green;
+    --current: #00ff00;
     --error: red;
+    --tagColor: #00ff00;
+
+    --textColor: white;
+    --textColorInverted: black;
 
     --premiumDark: linear-gradient(to right, #434343 0%, black 100%);
 }
@@ -61,4 +65,29 @@ input {
     color: var(--primary);
     background-color: transparent;
     transition-duration: 0.4s;
+}
+
+#tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tag {
+    font-size: 16px;
+    margin: 2px;
+    color: var(--tagColor);
+    transition-duration: 0.4s;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.tag::before {
+    content: '#';
+}
+
+.tag:hover {
+    text-decoration: underline;
 }
