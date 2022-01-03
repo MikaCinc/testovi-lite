@@ -12,25 +12,25 @@ namespace Models
 
         [Required]
         [MaxLength(250)]
-        [DefaulValue("Nova spojnica")]
+        // [DefaultValue("Nova spojnica")]
         public string Title { get; set; }
 
         [Required]
-        [DefaulValue(false)]
+        // [DefaultValue(false)]
         public bool Archived { get; set; }
         
         [Required]
-        [DefaulValue(false)]
+        // [DefaultValue(false)]
         public bool Highlighted { get; set; }
 
         [Required]
         [Range(1, 3)]
-        [DefaulValue(2)]
+        // [DefaultValue(2)]
         public int Priority { get; set; }
 
         [Required]
         // [Range(1, 3)]
-        [DefaulValue(0)]
+        // [DefaultValue(0)]
         public int NumberOfGames { get; set; }
 
         // public List<Spoj> StudentPredmet { get; set; } TAGOVI

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization; 
 
 namespace Models
 {
@@ -16,7 +17,7 @@ namespace Models
 
         [Required]
         [MaxLength(500)]
-        [Def]
+        //[DefaultValue("")]
         public string Question { get; set; }
 
         [Required]
@@ -24,7 +25,7 @@ namespace Models
         public string Answer { get; set; }
 
         [Required]
-        [DefaulValue(false)]
+        // [DefaultValue(false)]
         public bool isArchived { get; set; }
         // public List<Spoj> StudentPredmet { get; set; }
     }
