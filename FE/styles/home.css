@@ -1,0 +1,51 @@
+.homeContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.homeContentContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.tagsContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.singleTagContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.deleteBtn {
+    color: red !important;
+    padding: 5px !important;
+    border: 1px solid red !important;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px !important;
+    cursor: pointer;
+}
+
+.deleteBtn:hover {
+    background-color: #ff0000 !important;
+    color: white !important;
+}
+
+.searchContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.submitButton {
+    margin: 5px;
+}

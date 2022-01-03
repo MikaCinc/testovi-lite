@@ -10,4 +10,8 @@ const shuffleArray = (arr) => {
   return array;
 };
 
-export { shuffleArray };
+const getApiURL = () => {
+  return "https://localhost:3001/";
+};
+
+export { shuffleArray, getApiURL };

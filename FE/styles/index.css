@@ -50,6 +50,7 @@ h1 {
     transition-duration: 0.4s;
     cursor: pointer;
     text-transform: uppercase;
+    background-color: transparent;
 }
 
 .button:hover {

@@ -63,7 +63,8 @@ namespace WebAPI.Controllers
             {
                 Context.Tagovi.Add(tag); // Ne upisuje odmah u DB
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                return Ok($"Sve je u redu! ID novog taga je: {tag.ID}"); // DB ažurira i model pa sada znamo ID
+                // return Ok($"Sve je u redu! ID novog taga je: {tag.ID}"); // DB ažurira i model pa sada znamo ID
+                return Ok(tag); // DB ažurira i model pa sada znamo ID
             }
             catch (Exception e)
             {
@@ -127,7 +128,8 @@ namespace WebAPI.Controllers
                 {
                     Context.Tagovi.Remove(tag);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                    return Ok($"Tag ID = {tag.ID} | Title = {tag.Title} je uspešno izbrisan!"); // DB ažurira i model pa sada znamo ID
+                    // return Ok($"Tag ID = {tag.ID} | Title = {tag.Title} je uspešno izbrisan!"); // DB ažurira i model pa sada znamo ID
+                    return Ok(tag); // DB ažurira i model pa sada znamo ID
                 }
                 else
                 {

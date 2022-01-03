@@ -1,6 +1,7 @@
 // import { shuffleArray } from "./common.js";
 import Spojnica from "./spojnica.js";
 import Home from "./home.js";
+import { getApiURL } from "./common.js";
 
 let mockSpojnica = {
   id: "s-1",
@@ -42,6 +43,32 @@ let state = {
 };
 
 window.onload = () => {
-  const spojnica = new Spojnica(mockSpojnica);
-  spojnica.start();
+  Promise.all([
+    fetch(getApiURL() + "Tag/PreuzmiTagove", {
+      method: "get",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    }).then((res) => res.json()),
+    fetch(getApiURL() + "Pitanje/PreuzmiPitanja", {
+      method: "get",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    }).then((res) => res.json()),
+  ]).then(([tagovi, pitanja]) => {
+    console.log(tagovi, pitanja);
+    if (tagovi && tagovi.length) {
+      state.tagovi = tagovi;
+    }
+    if (pitanja && pitanja.length) {
+      state.pitanja = pitanja;
+    }
+
+    const home = new Home(state);
+    home.render();
+  });
+
+  /* const spojnica = new Spojnica(mockSpojnica);
+  spojnica.start(); */
 };
