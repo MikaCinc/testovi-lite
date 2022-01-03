@@ -123,6 +123,14 @@ class Spojnica {
     spojnicaContainer.appendChild(tagsContainer);
   }
 
+  novaSpojnica() {/* TODO */}
+
+  renderTile() {
+    const spojniceContainer = document.querySelector(".spojniceContainer");
+    const spojnicaElement = document.createElement("div");
+    spojnicaElement.className = "singleSpojnicaContainer";
+  }
+
   render() {
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content

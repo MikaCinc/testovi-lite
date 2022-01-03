@@ -106,3 +106,21 @@
     background-color: #ff0000 !important;
     color: white !important;
 }
+
+.spojniceContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.singleSpojnicaContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--secondary);
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+}

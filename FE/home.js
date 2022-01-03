@@ -1,5 +1,6 @@
 import { getApiURL } from "./common.js";
 import Pitanje from "./pitanje.js";
+import Spojnica from "./spojnica.js";
 
 class Home {
   constructor(data) {
@@ -180,6 +181,37 @@ class Home {
     });
   }
 
+  renderSpojnice() {
+    const container = document.querySelector(".homeContentContainer");
+    const spojniceContainer = document.createElement("div");
+    spojniceContainer.className = "spojniceContainer";
+    container.appendChild(spojniceContainer);
+
+    /* Naslov sekcije */
+    const title = document.createElement("h3");
+    title.innerHTML = "Spojnice";
+    spojniceContainer.appendChild(title);
+
+    /* Nova spojnica */
+    const newBtn = document.createElement("button");
+    newBtn.className = "button";
+    newBtn.innerHTML = "🆕 Nova spojnica";
+    newBtn.addEventListener(
+      "click",
+      () => {
+        const newSpojnica = new Spojnica();
+        newSpojnica.novaSpojnica();
+      } /* TODO */
+    );
+
+    /* Spojnice iz state-a */
+    const spojnice = this.state.spojnice;
+    spojnice.forEach((spojnica) => {
+      const s = new Spojnica(spojnica);
+      s.renderTile(); // Posebna render metoda
+    });
+  }
+
   render() {
     let container = document.querySelector(".homeContainer");
     if (!container) {
@@ -209,6 +241,7 @@ class Home {
     container.appendChild(contentContainer);
     document.body.appendChild(container);
 
+    this.renderSpojnice();
     this.renderQuestions();
     this.renderTags();
   }
