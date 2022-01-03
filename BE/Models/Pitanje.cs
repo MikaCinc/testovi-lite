@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization; 
+using System.Text.Json.Serialization;
 
 namespace Models
 {
@@ -27,6 +27,11 @@ namespace Models
         [Required]
         // [DefaultValue(false)]
         public bool isArchived { get; set; }
+
+        [Required]
+        public bool Highlighted { get; set; }
+
+        public System.DateTime DateCreated { get; set; }
         // public List<Spoj> StudentPredmet { get; set; }
     }
 }

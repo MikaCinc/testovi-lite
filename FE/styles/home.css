@@ -3,14 +3,32 @@
     flex-direction: column;
 }
 
+.searchContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.submitButton {
+    margin: 5px;
+}
+
 .homeContentContainer {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: center;
 }
 
 .tagsContainer {
     display: flex;
     flex-direction: column;
+    padding: 10px;
 }
 
 .singleTagContainer {
@@ -37,15 +55,54 @@
     color: white !important;
 }
 
-.searchContainer {
-    width: 100%;
-    height: 100%;
+.questionsContainer {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    padding: 10px;
 }
 
-.submitButton {
-    margin: 5px;
+.singleQuestionContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--secondary);
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.questionText {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.singleQuestionActions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.deleteQuestionBtn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: red !important;
+    padding: 5px !important;
+    border: 1px solid red !important;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px !important;
+    cursor: pointer;
+    background-color: black !important;
+}
+
+.deleteQuestionBtn:hover {
+    background-color: #ff0000 !important;
+    color: white !important;
 }

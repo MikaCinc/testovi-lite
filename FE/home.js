@@ -1,4 +1,5 @@
 import { getApiURL } from "./common.js";
+import Pitanje from "./pitanje.js";
 
 class Home {
   constructor(data) {
@@ -8,6 +9,7 @@ class Home {
 
     this.handleNewTag = this.handleNewTag.bind(this);
     // this.handleTagDelete = this.handleTagDelete.bind(this);
+    this.handleNewQuestion = this.handleNewQuestion.bind(this);
   }
 
   handleNewTag() {
@@ -59,17 +61,54 @@ class Home {
       .catch((err) => {});
   };
 
+  handleNewQuestion() {
+    const inputElement = document.querySelector(".newQuestionInput");
+    const newQuestion = inputElement.value;
+    inputElement.value = "";
+    const inputElementAnswer = document.querySelector(".newAnswerInput");
+    const newAnswer = inputElementAnswer.value;
+    inputElementAnswer.value = "";
+
+    fetch(getApiURL() + "Pitanje/DodajPitanje", {
+      method: "post",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({
+        question: newQuestion,
+        answer: newAnswer,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          this.state = {
+            ...this.state,
+            pitanja: [data, ...this.state.pitanja],
+          };
+          console.log(this.state);
+          this.render();
+        }
+      })
+      .catch((err) => {});
+  }
+
   renderTags() {
     const container = document.querySelector(".homeContentContainer");
     const tagsContainer = document.createElement("div");
     tagsContainer.className = "tagsContainer";
+
+    const title = document.createElement("h3");
+    title.innerHTML = "Tagovi";
+    tagsContainer.appendChild(title);
 
     const tags = this.state.tagovi;
     tags.forEach((tag) => {
       const tagElement = document.createElement("div");
       const tagP = document.createElement("p");
       const deleteBtn = document.createElement("button");
-      deleteBtn.innerHTML = "X";
+      deleteBtn.innerHTML = "🗑️";
       deleteBtn.className = "button deleteBtn";
       deleteBtn.addEventListener("click", () => this.handleTagDelete(tag.id));
       tagP.className = "tag";
@@ -93,6 +132,52 @@ class Home {
     tagsContainer.appendChild(submitButton);
 
     container.appendChild(tagsContainer);
+  }
+
+  renderQuestions() {
+    const container = document.querySelector(".homeContentContainer");
+    const questionsContainer = document.createElement("div");
+    questionsContainer.className = "questionsContainer";
+    container.appendChild(questionsContainer);
+
+    /* Naslov sekcije */
+    const title = document.createElement("h3");
+    title.innerHTML = "Pitanja";
+    questionsContainer.appendChild(title);
+
+    /* Novo pitanje */
+    const questionElement = document.createElement("div");
+    questionElement.className = "singleQuestionContainer";
+
+    const newQuestionInput = document.createElement("input");
+    newQuestionInput.className = "newQuestionInput";
+    newQuestionInput.setAttribute("type", "text");
+    newQuestionInput.setAttribute("placeholder", "Novo pitanje...");
+    const newAnswerInput = document.createElement("input");
+    newAnswerInput.className = "newAnswerInput";
+    newAnswerInput.setAttribute("type", "text");
+    newAnswerInput.setAttribute("placeholder", "Novi odgovor...");
+
+    const actions = document.createElement("div");
+    actions.className = "singleQuestionActions";
+
+    const submitButton = document.createElement("button");
+    submitButton.className = "button newQuestionButton";
+    submitButton.innerHTML = "Dodaj pitanje";
+    submitButton.addEventListener("click", this.handleNewQuestion);
+
+    actions.appendChild(submitButton);
+    questionElement.appendChild(newQuestionInput);
+    questionElement.appendChild(newAnswerInput);
+    questionElement.appendChild(actions);
+    questionsContainer.appendChild(questionElement);
+
+    /* Pitanja iz state-a */
+    const questions = this.state.pitanja;
+    questions.forEach((question) => {
+      const pitanje = new Pitanje(question);
+      pitanje.render();
+    });
   }
 
   render() {
@@ -124,6 +209,7 @@ class Home {
     container.appendChild(contentContainer);
     document.body.appendChild(container);
 
+    this.renderQuestions();
     this.renderTags();
   }
 }

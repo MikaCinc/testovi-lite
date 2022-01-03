@@ -32,7 +32,8 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> PreuzmiPitanja()
         {
-            return Ok(Context.Pitanja);
+            var pitanja = await Context.Pitanja.OrderByDescending(x => x.DateCreated).ToListAsync();
+            return Ok(pitanja);
         }
 
         [Route("PreuzmiPitanje/{index}")]
@@ -65,9 +66,11 @@ namespace WebAPI.Controllers
 
             try
             {
+                pitanje.DateCreated = DateTime.Now;
                 Context.Pitanja.Add(pitanje); // Ne upisuje odmah u DB
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                return Ok($"Sve je u redu! ID novog pitanja je: {pitanje.ID}"); // DB ažurira i model pa sada znamo ID
+                // return Ok($"Sve je u redu! ID novog pitanja je: {pitanje.ID}"); // DB ažurira i model pa sada znamo ID
+                return Ok(pitanje); // DB ažurira i model pa sada znamo ID
             }
             catch (Exception e)
             {
@@ -138,7 +141,8 @@ namespace WebAPI.Controllers
                 {
                     Context.Pitanja.Remove(pitanje);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                    return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID
+                    // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID
+                    return Ok(pitanje); // DB ažurira i model pa sada znamo ID
                 }
                 else
                 {

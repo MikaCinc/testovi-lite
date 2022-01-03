@@ -32,6 +32,7 @@ namespace Models
         // [Range(1, 3)]
         // [DefaultValue(0)]
         public int NumberOfGames { get; set; }
+        public System.DateTime DateCreated { get; set; }
 
         // public List<Spoj> StudentPredmet { get; set; } TAGOVI
         // public List<Spoj> StudentPredmet { get; set; } PITANJA
