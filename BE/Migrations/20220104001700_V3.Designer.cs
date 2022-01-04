@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(TestoviContext))]
-    partial class TestoviContextModelSnapshot : ModelSnapshot
+    [Migration("20220104001700_V3")]
+    partial class V3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,10 +44,15 @@ namespace WebAPI.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int?>("SpojnicaID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isArchived")
                         .HasColumnType("bit");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("SpojnicaID");
 
                     b.ToTable("Pitanje");
                 });
@@ -82,56 +89,15 @@ namespace WebAPI.Migrations
                     b.ToTable("Spojnica");
                 });
 
-            modelBuilder.Entity("Models.SpojnicePitanja", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("PitanjeID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SpojnicaID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PitanjeID");
-
-                    b.HasIndex("SpojnicaID");
-
-                    b.ToTable("SpojnicePitanja");
-                });
-
-            modelBuilder.Entity("Models.SpojniceTagovi", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("SpojnicaID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TagID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("SpojnicaID");
-
-                    b.HasIndex("TagID");
-
-                    b.ToTable("SpojniceTagovi");
-                });
-
             modelBuilder.Entity("Models.Tag", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("SpojnicaID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -140,44 +106,30 @@ namespace WebAPI.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("SpojnicaID");
+
                     b.ToTable("Tag");
                 });
 
-            modelBuilder.Entity("Models.SpojnicePitanja", b =>
+            modelBuilder.Entity("Models.Pitanje", b =>
                 {
-                    b.HasOne("Models.Pitanje", "Pitanje")
-                        .WithMany()
-                        .HasForeignKey("PitanjeID");
-
-                    b.HasOne("Models.Spojnica", "Spojnica")
-                        .WithMany("SpojnicePitanja")
+                    b.HasOne("Models.Spojnica", null)
+                        .WithMany("Pitanja")
                         .HasForeignKey("SpojnicaID");
-
-                    b.Navigation("Pitanje");
-
-                    b.Navigation("Spojnica");
                 });
 
-            modelBuilder.Entity("Models.SpojniceTagovi", b =>
+            modelBuilder.Entity("Models.Tag", b =>
                 {
-                    b.HasOne("Models.Spojnica", "Spojnica")
-                        .WithMany("SpojniceTagovi")
+                    b.HasOne("Models.Spojnica", null)
+                        .WithMany("Tagovi")
                         .HasForeignKey("SpojnicaID");
-
-                    b.HasOne("Models.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagID");
-
-                    b.Navigation("Spojnica");
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Models.Spojnica", b =>
                 {
-                    b.Navigation("SpojnicePitanja");
+                    b.Navigation("Pitanja");
 
-                    b.Navigation("SpojniceTagovi");
+                    b.Navigation("Tagovi");
                 });
 #pragma warning restore 612, 618
         }

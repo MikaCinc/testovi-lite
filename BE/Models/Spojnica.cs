@@ -18,7 +18,7 @@ namespace Models
         [Required]
         // [DefaultValue(false)]
         public bool Archived { get; set; }
-        
+
         [Required]
         // [DefaultValue(false)]
         public bool Highlighted { get; set; }
@@ -34,7 +34,7 @@ namespace Models
         public int NumberOfGames { get; set; }
         public System.DateTime DateCreated { get; set; }
 
-        // public List<Spoj> StudentPredmet { get; set; } TAGOVI
-        // public List<Spoj> StudentPredmet { get; set; } PITANJA
+        public List<SpojniceTagovi> SpojniceTagovi { get; set; }
+        public List<SpojnicePitanja> SpojnicePitanja { get; set; }
     }
 }
