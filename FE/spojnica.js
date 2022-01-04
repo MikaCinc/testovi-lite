@@ -74,6 +74,7 @@ class Spojnica {
   }
 
   exit = () => {
+    this.isOpened = false;
     document.querySelector(".homeContainer").style.display = "block";
     document.getElementById("spojnicaContainer").innerHTML = "";
   };
@@ -126,6 +127,29 @@ class Spojnica {
     // this.start();
   };
 
+  addExistingQuestion = (id) => {
+    const question = state.pitanja.find((pitanje) => pitanje.id === +id);
+    console.log(question);
+    if (!question || !question.id) return;
+    fetch(getApiURL() + "Spojnica/DodajPitanje/" + this.id, {
+      method: "put",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({
+        ...question,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        /* if (data?.id) {
+          this.render();
+        } */
+      })
+      .catch((err) => {});
+  };
+
   addNewTag = (tagId) => {
     fetch(getApiURL() + "Spojnica/DodajTag/" + this.id + "/" + tagId, {
       method: "put",
@@ -163,6 +187,30 @@ class Spojnica {
       .catch((err) => {});
   };
 
+  handleQuestionDelete = (pitanjeId) => {
+    fetch(
+      getApiURL() + "Spojnica/IzbrisiPitanje/" + this.id + "/" + pitanjeId,
+      {
+        method: "put",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          this.pitanja = this.pitanja.filter(
+            (pitanje) => pitanje.id !== pitanjeId
+          );
+          this.open();
+          // this.render();
+        }
+      })
+      .catch((err) => {});
+  };
+
   showAddNewQuestion() {
     document.getElementsByClassName("addNewButton")[0].style.display = "none";
     const spojnicaContainer = document.getElementById("spojnicaContainer");
@@ -195,6 +243,33 @@ class Spojnica {
     newContainer.appendChild(answerInput);
     newContainer.appendChild(addNewQuestionButton);
     spojnicaContainer.appendChild(newContainer);
+
+    const select = document.createElement("select");
+    select.id = "newQuestionSelect";
+    select.className = "select";
+    select.placeholder = "Izaberi postojeće pitanje";
+    select.value = null;
+    select.options.add(
+      new Option("Izaberi postojeće pitanje", "", false, false)
+    );
+    state.pitanja
+      .filter((t) => !this.questions.map((tmp) => tmp.id).includes(t.id))
+      .forEach((question) => {
+        select.options.add(
+          new Option(question.question, question.id, false, false)
+        );
+      });
+    select.onchange = () => {
+      if (!!select.value) {
+        this.addExistingQuestion(select.value);
+        select.value = "";
+        document.getElementById("newQuestionContainer").remove();
+        document.getElementsByClassName("addNewButton")[0].style.display =
+          "block";
+      }
+    };
+
+    newContainer.appendChild(select);
   }
 
   renderTags(container) {
@@ -223,8 +298,9 @@ class Spojnica {
       const select = document.createElement("select");
       select.id = "newTagSelect";
       select.className = "select";
+      select.placeholder = "Izaberi novi tag";
       select.value = null;
-      select.options.add(new Option("", "", false, false));
+      select.options.add(new Option("Izaberi novi tag", "", false, false));
       state.tagovi
         .filter((t) => !this.tags.map((tmp) => tmp.id).includes(t.id))
         .forEach((tag) => {
@@ -325,8 +401,17 @@ class Spojnica {
           this.checkAnswer();
         };
 
+        const deleteBtn = document.createElement("span");
+        deleteBtn.innerHTML = "🗑️";
+        deleteBtn.className = "button deleteBtn";
+        deleteBtn.addEventListener("click", () =>
+          this.handleQuestionDelete(question.id)
+        );
+        
+        row.appendChild(deleteBtn);
         row.appendChild(questionItem);
         row.appendChild(answerItem);
+
         spojnicaQuestions.appendChild(row);
       });
       spojnicaContainer.appendChild(spojnicaQuestions);

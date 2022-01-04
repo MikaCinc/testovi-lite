@@ -139,6 +139,7 @@ namespace WebAPI.Controllers
 
                 if (pitanje != null)
                 {
+                    Context.SpojnicePitanja.RemoveRange(Context.SpojnicePitanja.Where(s => s.Pitanje.ID == id));
                     Context.Pitanja.Remove(pitanje);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                     // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID

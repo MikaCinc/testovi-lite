@@ -1,6 +1,7 @@
 import { getApiURL } from "./common.js";
 import Pitanje from "./pitanje.js";
 import Spojnica from "./spojnica.js";
+import state from "./index.js";
 
 class Home {
   constructor(data) {
@@ -35,7 +36,12 @@ class Home {
             ...this.state,
             tagovi: [...this.state.tagovi, data],
           };
-          console.log(this.state);
+          /* state = {
+            // Global state
+            ...state,
+            tagovi: [...state.tagovi, data],
+          };
+          console.log(this.state, state); */
           this.render();
         }
       })
@@ -55,6 +61,12 @@ class Home {
         this.state = {
           ...this.state,
           tagovi: [...this.state.tagovi.filter((tag) => tag.id !== id)],
+          spojnice: [
+            ...this.state.spojnice.map((spojnica) => ({
+              ...spojnica,
+              tagovi: spojnica.tagovi.filter((tag) => tag.id !== id),
+            })),
+          ],
         };
         console.log(this.state);
         this.render();

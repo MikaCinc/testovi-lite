@@ -305,6 +305,47 @@ namespace WebAPI.Controllers
             }
         }
 
+        [Route("IzbrisiPitanje/{spojnicaId}/{pitanjeId}")]
+        [HttpPut]
+        public async Task<ActionResult> IzbrisiPitanje(int pitanjeId, int spojnicaId)
+        {
+            if (pitanjeId < 0 || spojnicaId < 0)
+            {
+                return BadRequest("Pogrešan ID!");
+            }
+
+            try
+            {
+                var foundPitanje = Context.Pitanja.Where(t => t.ID == pitanjeId).FirstOrDefault(); // var menja bilo koji tip
+                var foundSpojnica = Context.Spojnice.Where(s => s.ID == spojnicaId).FirstOrDefault(); // var menja bilo koji tip
+
+                if (foundPitanje != null && foundSpojnica != null)
+                {
+                    var veza = Context.SpojnicePitanja.Where(st => st.Spojnica.ID == spojnicaId && st.Pitanje.ID == pitanjeId).ToList();
+                    bool vecPostoji = veza.Count > 0;
+                    if (vecPostoji)
+                    {
+                        Context.SpojnicePitanja.Remove(veza[0]);
+                        int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
+                        return Ok(foundSpojnica); // DB ažurira i model pa sada znamo ID
+                    }
+                    else
+                    {
+                        return BadRequest("Pitanje ne postoji u ovoj spojnici!");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Spojnica ili pitanje nije pronađen/o!");
+                }
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [Route("IzbrisiSpojnicu/{id}")]
         [HttpDelete]
         public async Task<ActionResult> IzbrisiSpojnicu(int id)

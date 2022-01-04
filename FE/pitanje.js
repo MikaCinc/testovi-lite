@@ -1,3 +1,5 @@
+import { getApiURL } from "./common.js";
+
 class Pitanje {
   constructor(pitanje) {
     this.question = pitanje;
@@ -13,12 +15,13 @@ class Pitanje {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        this.state = {
+        /* this.state = {
           ...this.state,
           pitanja: [...this.state.pitanja.filter((p) => p.id !== id)],
         };
         console.log(this.state);
-        this.render();
+        this.render(); */
+        document.getElementById("questionContainer-" + id).remove();
       })
       .catch((err) => {});
   };
@@ -68,6 +71,7 @@ class Pitanje {
     );
 
     questionElement.className = "singleQuestionContainer";
+    questionElement.id = "questionContainer-" + this.question.id;
     questionElement.appendChild(questionP);
     questionElement.appendChild(answerInput);
     questionElement.appendChild(deleteBtn);
