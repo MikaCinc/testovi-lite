@@ -4,19 +4,18 @@ class Spojnica {
   constructor(spojnica) {
     this.id = spojnica.id;
     this.title = spojnica.title;
-    this.questions = shuffleArray(spojnica.questions);
-    this.answers = shuffleArray(spojnica.questions).map((question) => ({
-      id: question.id,
-      answer: question.answer,
-    }));
-    this.tags = spojnica.tags;
+    this.questions = spojnica.pitanja;
+    this.answers = [];
+    this.tags = spojnica.tagovi;
 
     this.completed = []; // id array of completed questions
     this.currentIndex = 0; // index of current question
-    this.currentQuestion = this.questions[0].id; // id of current question
+    this.currentQuestion = null; // id of current question
     this.selectedAnswer = null; // id of selected answer
 
     this.showNewQuestion = false;
+
+    this.start = this.start.bind(this);
   }
 
   checkAnswer() {
@@ -40,7 +39,16 @@ class Spojnica {
     this.render();
   }
 
+  reshuffle() {
+    this.questions = shuffleArray(this.questions);
+    this.answers = shuffleArray(this.questions).map((question) => ({
+      id: question.id,
+      answer: question.answer,
+    }));
+  }
+
   start() {
+    this.reshuffle();
     this.completed = [];
     this.currentIndex = 0;
     this.currentQuestion = this.questions[0].id;
@@ -109,26 +117,56 @@ class Spojnica {
     spojnicaContainer.appendChild(newContainer);
   }
 
-  renderTags() {
-    const spojnicaContainer = document.getElementById("spojnicaContainer");
+  renderTags(container) {
+    if (!this.tags || !this.tags.length) return;
+    // const spojnicaContainer = document.getElementById("spojnicaContainer");
     const tagsContainer = document.createElement("div");
     tagsContainer.id = "tagsContainer";
 
     this.tags.forEach((tag) => {
       const tagEl = document.createElement("p");
       tagEl.className = "tag";
-      tagEl.innerText = tag;
+      tagEl.innerText = tag.title;
       tagsContainer.appendChild(tagEl);
     });
-    spojnicaContainer.appendChild(tagsContainer);
+    container.appendChild(tagsContainer);
   }
 
-  novaSpojnica() {/* TODO */}
+  novaSpojnica() {
+    /* TODO */
+  }
 
   renderTile() {
     const spojniceContainer = document.querySelector(".spojniceContainer");
     const spojnicaElement = document.createElement("div");
     spojnicaElement.className = "singleSpojnicaContainer";
+
+    const titleP = document.createElement("p");
+    titleP.className = "questionText";
+    titleP.innerHTML = this.title;
+    spojnicaElement.appendChild(titleP);
+
+    this.renderTags(spojnicaElement);
+
+    const openButton = document.createElement("button");
+    openButton.className = "button openButton";
+    openButton.innerHTML = "Otvori";
+    openButton.addEventListener("click", this.start);
+
+    const showButton = document.createElement("button");
+    showButton.className = "button showButton";
+    showButton.innerHTML = "👁️‍🗨️Prikaži";
+    /* showButton.addEventListener("click", () => {
+      answerInput.value = this.question.answer;
+    }); */
+
+    const actions = document.createElement("div");
+    actions.className = "singleQuestionActions";
+    actions.appendChild(openButton);
+    actions.appendChild(showButton);
+
+    spojnicaElement.appendChild(actions);
+    spojniceContainer.appendChild(spojnicaElement);
   }
 
   render() {
@@ -139,7 +177,7 @@ class Spojnica {
     spojnicaTitle.innerText = this.title;
     spojnicaContainer.appendChild(spojnicaTitle);
 
-    this.renderTags();
+    this.renderTags(spojnicaContainer);
 
     const spojnicaQuestions = document.createElement("div");
     spojnicaQuestions.classList.add("spojnicaQuestions");

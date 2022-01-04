@@ -32,7 +32,37 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> PreuzmiSpojnice()
         {
-            var spojnice = await Context.Spojnice.OrderByDescending(x => x.DateCreated).ToListAsync();
+            var spojnice = await Context.Spojnice
+            .OrderByDescending(x => x.DateCreated)
+            .Include(x => x.Tagovi)
+            .ThenInclude(x => x.Tag)
+            .Include(x => x.Pitanja)
+            .ThenInclude(x => x.Pitanje)
+            .Select(p => new
+            {
+                p.ID,
+                p.Title,
+                p.Archived,
+                p.Highlighted,
+                p.Priority,
+                p.NumberOfGames,
+                p.DateCreated,
+                Tagovi = p.Tagovi.Select(t => new
+                {
+                    t.Tag.ID,
+                    t.Tag.Title
+                }),
+                Pitanja = p.Pitanja.Select(t => new
+                {
+                    t.Pitanje.ID,
+                    t.Pitanje.Question,
+                    t.Pitanje.Answer,
+                    t.Pitanje.isArchived,
+                    t.Pitanje.Highlighted,
+                    t.Pitanje.DateCreated,
+                })
+            })
+            .ToListAsync();
             return Ok(spojnice);
         }
 
@@ -69,7 +99,7 @@ namespace WebAPI.Controllers
                 spojnica.NumberOfGames = 0;
                 Context.Spojnice.Add(spojnica); // Ne upisuje odmah u DB
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                // return Ok($"Sve je u redu! ID novog pitanja je: {spojnica.ID}"); // DB ažurira i model pa sada znamo ID
+                                                                    // return Ok($"Sve je u redu! ID novog pitanja je: {spojnica.ID}"); // DB ažurira i model pa sada znamo ID
                 return Ok(spojnica); // DB ažurira i model pa sada znamo ID
             }
             catch (Exception e)
@@ -251,7 +281,7 @@ namespace WebAPI.Controllers
                 {
                     Context.Spojnice.Remove(spojnica);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
-                    // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID
+                                                                        // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID
                     return Ok(spojnica); // DB ažurira i model pa sada znamo ID
                 }
                 else
