@@ -126,6 +126,7 @@ namespace WebAPI.Controllers
 
                 if (tag != null)
                 {
+                    Context.SpojniceTagovi.RemoveRange(Context.SpojniceTagovi.Where(s => s.Tag.ID == id));
                     Context.Tagovi.Remove(tag);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                     // return Ok($"Tag ID = {tag.ID} | Title = {tag.Title} je uspešno izbrisan!"); // DB ažurira i model pa sada znamo ID

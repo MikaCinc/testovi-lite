@@ -194,7 +194,7 @@ class Home {
 
     /* Nova spojnica */
     const newBtn = document.createElement("button");
-    newBtn.className = "button";
+    newBtn.className = "button newSpojnicaBtn";
     newBtn.innerHTML = "🆕 Nova spojnica";
     newBtn.addEventListener(
       "click",
@@ -203,6 +203,8 @@ class Home {
         newSpojnica.novaSpojnica();
       } /* TODO */
     );
+
+    spojniceContainer.appendChild(newBtn);
 
     /* Spojnice iz state-a */
     const spojnice = this.state.spojnice;

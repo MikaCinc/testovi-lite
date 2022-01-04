@@ -149,7 +149,7 @@ namespace WebAPI.Controllers
             // return StatusCode(404, "pitanje not found...");
         }
 
-        [Route("DodajTag/{spojnicaId}")]
+        [Route("DodajTag/{spojnicaId}/{tagId}")]
         [HttpPut]
         public async Task<ActionResult> DodajTag(int tagId, int spojnicaId)
         {
@@ -180,6 +180,47 @@ namespace WebAPI.Controllers
                     else
                     {
                         return BadRequest("Tag već postoji u ovoj spojnici!");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Spojnica ili tag nije pronađen/a!");
+                }
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Route("IzbrisiTag/{spojnicaId}/{tagId}")]
+        [HttpPut]
+        public async Task<ActionResult> IzbrisiTag(int tagId, int spojnicaId)
+        {
+            if (tagId < 0 || spojnicaId < 0)
+            {
+                return BadRequest("Pogrešan ID!");
+            }
+
+            try
+            {
+                var foundTag = Context.Tagovi.Where(t => t.ID == tagId).FirstOrDefault(); // var menja bilo koji tip
+                var foundSpojnica = Context.Spojnice.Where(s => s.ID == spojnicaId).FirstOrDefault(); // var menja bilo koji tip
+
+                if (foundTag != null && foundSpojnica != null)
+                {
+                    var veza = Context.SpojniceTagovi.Where(st => st.Spojnica.ID == spojnicaId && st.Tag.ID == tagId).ToList();
+                    bool vecPostoji = veza.Count > 0;
+                    if (vecPostoji)
+                    {
+                        Context.SpojniceTagovi.Remove(veza[0]);
+                        int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
+                        return Ok(foundSpojnica); // DB ažurira i model pa sada znamo ID
+                    }
+                    else
+                    {
+                        return BadRequest("Tag ne postoji u ovoj spojnici!");
                     }
                 }
                 else

@@ -81,3 +81,5 @@ window.onload = () => {
   /* const spojnica = new Spojnica(mockSpojnica);
   spojnica.start(); */
 };
+
+export default state;

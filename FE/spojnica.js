@@ -1,12 +1,13 @@
-import { shuffleArray } from "./common.js";
+import { shuffleArray, getApiURL } from "./common.js";
+import state from "./index.js";
 
 class Spojnica {
   constructor(spojnica) {
-    this.id = spojnica.id;
-    this.title = spojnica.title;
-    this.questions = spojnica.pitanja;
+    this.id = spojnica?.id || 0;
+    this.title = spojnica?.title || "Nova spojnica";
+    this.questions = spojnica?.pitanja || [];
     this.answers = [];
-    this.tags = spojnica.tagovi;
+    this.tags = spojnica?.tagovi || [];
 
     this.completed = []; // id array of completed questions
     this.currentIndex = 0; // index of current question
@@ -14,8 +15,11 @@ class Spojnica {
     this.selectedAnswer = null; // id of selected answer
 
     this.showNewQuestion = false;
+    this.isOpened = false;
 
     this.start = this.start.bind(this);
+    this.render = this.render.bind(this);
+    this.open = this.open.bind(this);
   }
 
   checkAnswer() {
@@ -56,7 +60,25 @@ class Spojnica {
     this.render();
   }
 
-  addNewQuestion(question, answer) {
+  open() {
+    this.isOpened = true;
+    if (this.questions && this.questions.length) {
+      this.start();
+    } else {
+      this.completed = [];
+      this.currentIndex = 0;
+      this.currentQuestion = null;
+      this.selectedAnswer = null;
+      this.render();
+    }
+  }
+
+  exit = () => {
+    document.querySelector(".homeContainer").style.display = "block";
+    document.getElementById("spojnicaContainer").innerHTML = "";
+  };
+
+  addNewQuestion = (question, answer) => {
     if (!question || !answer) return;
 
     // Dodaje globalno novo pitanje u tabelu Pitanja
@@ -80,8 +102,66 @@ class Spojnica {
       answer: question.answer,
     })); */
 
-    this.start();
-  }
+    fetch(getApiURL() + "Spojnica/DodajPitanje/" + this.id, {
+      method: "put",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({
+        question,
+        answer,
+        isArchived: false,
+        highlighted: false,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        /* if (data?.id) {
+          this.render();
+        } */
+      })
+      .catch((err) => {});
+
+    // this.start();
+  };
+
+  addNewTag = (tagId) => {
+    fetch(getApiURL() + "Spojnica/DodajTag/" + this.id + "/" + tagId, {
+      method: "put",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          let noviTag = state.tagovi.find((tag) => tag.id === +tagId);
+          this.tags.push(noviTag);
+          this.render();
+        }
+      })
+      .catch((err) => {});
+  };
+
+  handleTagDelete = (tagId) => {
+    fetch(getApiURL() + "Spojnica/IzbrisiTag/" + this.id + "/" + tagId, {
+      method: "put",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          this.tags = this.tags.filter((tag) => tag.id !== tagId);
+          this.render();
+        }
+      })
+      .catch((err) => {});
+  };
 
   showAddNewQuestion() {
     document.getElementsByClassName("addNewButton")[0].style.display = "none";
@@ -118,18 +198,46 @@ class Spojnica {
   }
 
   renderTags(container) {
-    if (!this.tags || !this.tags.length) return;
-    // const spojnicaContainer = document.getElementById("spojnicaContainer");
-    const tagsContainer = document.createElement("div");
-    tagsContainer.id = "tagsContainer";
+    if (this.tags && this.tags.length) {
+      // const spojnicaContainer = document.getElementById("spojnicaContainer");
+      const tagsContainer = document.createElement("div");
+      tagsContainer.id = "tagsContainer";
 
-    this.tags.forEach((tag) => {
-      const tagEl = document.createElement("p");
-      tagEl.className = "tag";
-      tagEl.innerText = tag.title;
-      tagsContainer.appendChild(tagEl);
-    });
-    container.appendChild(tagsContainer);
+      this.tags.forEach((tag) => {
+        const tagEl = document.createElement("p");
+        tagEl.className = "tag";
+        tagEl.innerText = tag.title;
+        tagsContainer.appendChild(tagEl);
+
+        if (!this.isOpened) return;
+        const deleteBtn = document.createElement("span");
+        deleteBtn.innerHTML = "🗑️";
+        deleteBtn.className = "button deleteBtn";
+        deleteBtn.addEventListener("click", () => this.handleTagDelete(tag.id));
+        tagEl.appendChild(deleteBtn);
+      });
+      container.appendChild(tagsContainer);
+    }
+
+    if (this.isOpened) {
+      const select = document.createElement("select");
+      select.id = "newTagSelect";
+      select.className = "select";
+      select.value = null;
+      select.options.add(new Option("", "", false, false));
+      state.tagovi
+        .filter((t) => !this.tags.map((tmp) => tmp.id).includes(t.id))
+        .forEach((tag) => {
+          select.options.add(new Option(tag.title, tag.id, false, false));
+        });
+      select.onchange = () => {
+        if (!!select.value) {
+          this.addNewTag(select.value);
+          select.value = "";
+        }
+      };
+      container.appendChild(select);
+    }
   }
 
   novaSpojnica() {
@@ -150,8 +258,8 @@ class Spojnica {
 
     const openButton = document.createElement("button");
     openButton.className = "button openButton";
-    openButton.innerHTML = "Otvori";
-    openButton.addEventListener("click", this.start);
+    openButton.innerHTML = "▶️ Otvori";
+    openButton.addEventListener("click", this.open);
 
     const showButton = document.createElement("button");
     showButton.className = "button showButton";
@@ -170,6 +278,7 @@ class Spojnica {
   }
 
   render() {
+    document.querySelector(".homeContainer").style.display = "none";
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content
 
@@ -179,44 +288,49 @@ class Spojnica {
 
     this.renderTags(spojnicaContainer);
 
-    const spojnicaQuestions = document.createElement("div");
-    spojnicaQuestions.classList.add("spojnicaQuestions");
-    this.questions.forEach((question, index) => {
-      const isCurrent = question.id === this.currentQuestion;
-      const isCorrect = this.completed.includes(question.id);
-      const isIncorrect = index < this.currentIndex && !isCorrect;
+    if (this.questions && this.questions.length) {
+      const spojnicaQuestions = document.createElement("div");
+      spojnicaQuestions.classList.add("spojnicaQuestions");
+      this.questions.forEach((question, index) => {
+        const isCurrent = question.id === this.currentQuestion;
+        const isCorrect = this.completed.includes(question.id);
+        const isIncorrect = index < this.currentIndex && !isCorrect;
 
-      const row = document.createElement("div");
-      row.className = "spojnicaQuestionsRow";
-      const questionItem = document.createElement("div");
-      const answerItem = document.createElement("div");
+        const row = document.createElement("div");
+        row.className = "spojnicaQuestionsRow";
+        const questionItem = document.createElement("div");
+        const answerItem = document.createElement("div");
 
-      questionItem.innerText = question.question;
-      questionItem.id = `q-${question.id}`;
-      questionItem.className = `spojnicaQuestionButton ${
-        isCurrent && !this.isFinished() && "currentQuestion"
-      } ${isCorrect && "correctQuestion"} ${
-        isIncorrect && "incorrectQuestion"
-      }`;
+        questionItem.innerText = question.question;
+        questionItem.id = `q-${question.id}`;
+        questionItem.className = `spojnicaQuestionButton ${
+          isCurrent && !this.isFinished() && "currentQuestion"
+        } ${isCorrect && "correctQuestion"} ${
+          isIncorrect && "incorrectQuestion"
+        }`;
 
-      const isCorrectAnswer = this.completed.includes(this.answers[index].id);
-      answerItem.innerText = this.answers[index].answer;
-      answerItem.id = `a-${question.id}`;
-      answerItem.className = `spojnicaAnswerButton ${
-        isCorrectAnswer && "correctAnswer"
-      }`;
-      answerItem.onclick = () => {
-        if (this.isFinished() || answerItem.classList.contains("correctAnswer"))
-          return;
-        this.selectedAnswer = this.answers[index].id;
-        this.checkAnswer();
-      };
+        const isCorrectAnswer = this.completed.includes(this.answers[index].id);
+        answerItem.innerText = this.answers[index].answer;
+        answerItem.id = `a-${question.id}`;
+        answerItem.className = `spojnicaAnswerButton ${
+          isCorrectAnswer && "correctAnswer"
+        }`;
+        answerItem.onclick = () => {
+          if (
+            this.isFinished() ||
+            answerItem.classList.contains("correctAnswer")
+          )
+            return;
+          this.selectedAnswer = this.answers[index].id;
+          this.checkAnswer();
+        };
 
-      row.appendChild(questionItem);
-      row.appendChild(answerItem);
-      spojnicaQuestions.appendChild(row);
-    });
-    spojnicaContainer.appendChild(spojnicaQuestions);
+        row.appendChild(questionItem);
+        row.appendChild(answerItem);
+        spojnicaQuestions.appendChild(row);
+      });
+      spojnicaContainer.appendChild(spojnicaQuestions);
+    }
 
     const addNewButton = document.createElement("div");
     addNewButton.className = "button addNewButton";
@@ -224,7 +338,15 @@ class Spojnica {
     addNewButton.onclick = () => {
       this.showAddNewQuestion();
     };
+
+    const exitButton = document.createElement("button");
+    exitButton.className = "button exitButton";
+    exitButton.innerText = "🏠 Nazad na početnu";
+    exitButton.onclick = () => {
+      this.exit();
+    };
     spojnicaContainer.appendChild(addNewButton);
+    spojnicaContainer.appendChild(exitButton);
   }
 }
 

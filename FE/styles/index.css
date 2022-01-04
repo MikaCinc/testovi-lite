@@ -69,6 +69,39 @@ input {
     transition-duration: 0.4s;
 }
 
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px dashed var(--tagColor);
+    border-radius: 5px;
+    color: var(--tagColor);
+    background-color: black;
+    transition-duration: 0.4s;
+    margin-bottom: 10px;
+}
+
+select:hover {
+    border: 1px solid var(--tagColor) !important;
+    transition-duration: 0.4s;
+}
+
+option {
+    color: var(--textColor);
+    background-color: black;
+}
+
+/* option:not(:checked) {
+    background-color: black;
+} */
+
+option:checked {
+    background-color: var(--tagColor);
+}
+
+option:hover {
+    background-color: var(--tagColor) !important;
+}
+
 #tagsContainer {
     display: flex;
     flex-wrap: wrap;
