@@ -34,7 +34,7 @@ namespace Models
         public int NumberOfGames { get; set; }
         public System.DateTime DateCreated { get; set; }
 
-        public List<SpojniceTagovi> SpojniceTagovi { get; set; }
-        public List<SpojnicePitanja> SpojnicePitanja { get; set; }
+        public List<SpojniceTagovi> Tagovi { get; set; }
+        public List<SpojnicePitanja> Pitanja { get; set; }
     }
 }

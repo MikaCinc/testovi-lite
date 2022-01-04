@@ -133,11 +133,10 @@ namespace WebAPI.Controllers
                 var foundTag = Context.Tagovi.Where(t => t.ID == tagId).FirstOrDefault(); // var menja bilo koji tip
                 var foundSpojnica = Context.Spojnice.Where(s => s.ID == spojnicaId).FirstOrDefault(); // var menja bilo koji tip
 
-                var vecPostoji = Context.SpojniceTagovi.Where(st => st.Spojnica.ID == spojnicaId && st.Tag.ID == tagId).ToList()[0];
-
                 if (foundTag != null && foundSpojnica != null)
                 {
-                    if (vecPostoji == null)
+                    bool vecPostoji = Context.SpojniceTagovi.Where(st => st.Spojnica.ID == spojnicaId && st.Tag.ID == tagId).ToList().Count > 0;
+                    if (!vecPostoji)
                     {
                         SpojniceTagovi s = new SpojniceTagovi
                         {
@@ -183,8 +182,8 @@ namespace WebAPI.Controllers
                 {
                     if (foundPitanje != null)
                     {
-                        var vecPostoji = Context.SpojnicePitanja.Where(st => st.Spojnica.ID == spojnicaId && st.Pitanje.ID == pitanje.ID).ToList()[0];
-                        if (vecPostoji == null)
+                        bool vecPostoji = Context.SpojnicePitanja.Where(st => st.Spojnica.ID == spojnicaId && st.Pitanje.ID == pitanje.ID).ToList().Count > 0;
+                        if (!vecPostoji)
                         {
                             SpojnicePitanja s = new SpojnicePitanja
                             {

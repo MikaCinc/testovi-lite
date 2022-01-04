@@ -56,13 +56,22 @@ window.onload = () => {
         "Content-Type": "application/json",
       }),
     }).then((res) => res.json()),
-  ]).then(([tagovi, pitanja]) => {
-    console.log(tagovi, pitanja);
+    fetch(getApiURL() + "Spojnica/PreuzmiSpojnice", {
+      method: "get",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    }).then((res) => res.json()),
+  ]).then(([tagovi, pitanja, spojnice]) => {
+    console.log(tagovi, pitanja, spojnice);
     if (tagovi && tagovi.length) {
       state.tagovi = tagovi;
     }
     if (pitanja && pitanja.length) {
       state.pitanja = pitanja;
+    }
+    if (spojnice && spojnice.length) {
+      state.spojnice = spojnice;
     }
 
     const home = new Home(state);

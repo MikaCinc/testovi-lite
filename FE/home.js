@@ -207,8 +207,8 @@ class Home {
     /* Spojnice iz state-a */
     const spojnice = this.state.spojnice;
     spojnice.forEach((spojnica) => {
-      const s = new Spojnica(spojnica);
-      s.renderTile(); // Posebna render metoda
+    //   const s = new Spojnica(spojnica);
+    //   s.renderTile(); // Posebna render metoda
     });
   }
 
