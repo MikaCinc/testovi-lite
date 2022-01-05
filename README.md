@@ -1,5 +1,7 @@
 # Testovi Lite edition
 
+![Homepage](Slike/home.jpg)
+
 [Testovi - Full edition](https://testovi-inc.netlify.app/)
 [Mihajlo - Portfolio](https://www.mihajlo.engineer/)
 
