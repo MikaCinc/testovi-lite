@@ -108,6 +108,37 @@ class Home {
       .catch((err) => {});
   }
 
+  fetchSpojniceByTag = (tagId) => {
+    fetch(getApiURL() + "Search/PreuzmiSpojnicePoTagu/" + tagId)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        this.state = {
+          ...this.state,
+          spojnice: data,
+        };
+        this.render();
+      })
+      .catch((err) => {});
+  };
+
+  fetchSpojniceByString = () => {
+    let value = document.querySelector("#searchInput").value;
+    if (value.length < 3) return;
+
+    fetch(getApiURL() + "Search/PreuzmiSpojnicePoNazivu/" + value)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        this.state = {
+          ...this.state,
+          spojnice: data,
+        };
+        this.render();
+      })
+      .catch((err) => {});
+  };
+
   renderSettings() {
     const container = document.querySelector(".homeContentContainer");
     const settingsContainer = document.createElement("div");
@@ -193,6 +224,9 @@ class Home {
       deleteBtn.addEventListener("click", () => this.handleTagDelete(tag.id));
       tagP.className = "tag";
       tagP.innerHTML = tag.title;
+      tagP.onclick = () => {
+        this.fetchSpojniceByTag(tag.id);
+      };
       tagElement.className = "singleTagContainer";
       tagElement.appendChild(tagP);
       tagElement.appendChild(deleteBtn);
@@ -304,6 +338,7 @@ class Home {
 
     /* Spojnice iz state-a */
     const spojnice = this.state.spojnice;
+    if (!spojnice || !spojnice.length) return;
     spojnice.forEach((spojnica) => {
       const s = new Spojnica(spojnica, this.render);
       s.renderTile(); // Posebna render metoda
@@ -325,13 +360,14 @@ class Home {
     searchContainer.className = "searchContainer";
 
     const searchInput = document.createElement("input");
-    searchInput.className = "searchInput";
+    searchInput.id = "searchInput";
     searchInput.setAttribute("type", "text");
     searchInput.setAttribute("placeholder", "Pretraži pitanja i spojnice");
 
     const submitButton = document.createElement("button");
     submitButton.className = "button submitButton";
     submitButton.innerHTML = "Pretraži";
+    submitButton.addEventListener("click", this.fetchSpojniceByString);
 
     searchContainer.appendChild(searchInput);
     searchContainer.appendChild(submitButton);

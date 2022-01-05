@@ -440,7 +440,7 @@ class Spojnica {
         archived: false,
         highlighted: true,
         numberOfGames: 0,
-        priority: 1,
+        priority: this.priority,
       }),
     })
       .then((res) => res.json())

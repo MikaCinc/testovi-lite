@@ -33,6 +33,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult> PreuzmiSpojnice()
         {
             var spojnice = await Context.Spojnice
+            // .Where(s => s.Highlighted == true)
             .OrderByDescending(x => x.DateCreated)
             .Include(x => x.Tagovi)
             .ThenInclude(x => x.Tag)
@@ -68,7 +69,7 @@ namespace WebAPI.Controllers
 
         [Route("PreuzmiSpojnicu/{index}")]
         [HttpGet]
-        public async Task<ActionResult> PreuzmiPitanje(int index)
+        public async Task<ActionResult> PreuzmiSpojnicu(int index)
         {
             // Lazy loading
             // Eager loading - cela baza uključena
@@ -95,7 +96,7 @@ namespace WebAPI.Controllers
                 spojnica.DateCreated = DateTime.Now;
                 spojnica.Archived = false;
                 spojnica.Highlighted = true;
-                spojnica.Priority = 1;
+                spojnica.Priority = spojnica.Priority;
                 spojnica.NumberOfGames = 0;
                 Context.Spojnice.Add(spojnica); // Ne upisuje odmah u DB
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB

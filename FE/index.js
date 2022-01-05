@@ -37,7 +37,7 @@ let mockSpojnica = {
 };
 
 let state = {
-  spojnice: [{ ...mockSpojnica }],
+  spojnice: [],
   pitanja: [],
   tagovi: [],
 };
