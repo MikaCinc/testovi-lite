@@ -46,7 +46,7 @@
 .deleteBtn {
     color: red !important;
     padding: 5px !important;
-    border: 1px solid red !important;
+    border: 1.8px solid red !important;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -74,7 +74,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--secondary);
+    border: 1.8px solid var(--secondary);
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 15px;
@@ -100,7 +100,7 @@
     right: -10px;
     color: red !important;
     padding: 5px !important;
-    border: 1px solid red !important;
+    border: 1.8px solid red !important;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -126,7 +126,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--secondary);
+    border: 1.8px solid var(--secondary);
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 15px;
