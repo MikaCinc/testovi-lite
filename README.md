@@ -9,5 +9,5 @@ Testovi Lite sadrže 3 glavna entiteta:
 - Tag
 
 ## Spojnica
-![Spojnica model](s_model.jpg)
-![Spojnica CRUD](s_rute.jpg)
+![Spojnica model](Slike/s_model.jpg)
+![Spojnica CRUD](Slike/s_rute.jpg)
