@@ -89,6 +89,21 @@ class Spojnica {
     }
   }
 
+  editMode = () => {
+    this.isEdit = true;
+
+    /* document.getElementById("editSpojnicaButton").style.display = "none";
+    document.getElementById("publishEditsSpojnicaButton").style.display =
+      "flex"; */
+
+    this.open();
+  };
+
+  exitEditMode = () => {
+    this.isEdit = false;
+    this.open();
+  };
+
   exit = () => {
     this.isOpened = false;
     document.getElementsByTagName("h1")[0].innerHTML =
@@ -256,7 +271,7 @@ class Spojnica {
       .catch((err) => {});
   };
 
-  handleSpojnicaEdit = () => {
+  handleSpojnicaEdit = (callback) => {
     fetch(getApiURL() + "Spojnica/PromeniSpojnicu", {
       method: "put",
       headers: new Headers({
@@ -277,6 +292,10 @@ class Spojnica {
         if (data?.id) {
           // this.parentRender();
           this.renderTile(true);
+
+          if (callback) {
+            callback();
+          }
         }
       })
       .catch((err) => {});
@@ -341,6 +360,23 @@ class Spojnica {
     newContainer.appendChild(addNewQuestionButton);
     spojnicaContainer.appendChild(newContainer);
   }
+
+  renderPriorityEditor = (container) => {
+    const select = document.createElement("select");
+    select.id = "prioritySelect";
+    select.className = "select";
+    select.placeholder = "Izmeni prioritet";
+    select.value = this.priority;
+    select.options.add(new Option("🔺1", 1, this.priority === 1, false));
+    select.options.add(new Option("🔺2", 2, this.priority === 2, false));
+    select.options.add(new Option("🔺3", 3, this.priority === 3, false));
+    select.onchange = () => {
+      if (!!select.value) {
+        this.priority = +select.value;
+      }
+    };
+    container.appendChild(select);
+  };
 
   renderTags(container, flag = false) {
     if (this.tags && this.tags.length) {
@@ -479,7 +515,7 @@ class Spojnica {
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content
 
-    if (this.isNew) {
+    if (this.isNew || this.isEdit) {
       const spojnicaTitle = document.createElement("input");
       spojnicaTitle.id = "spojnicaTitle";
       spojnicaTitle.className = "input";
@@ -489,6 +525,7 @@ class Spojnica {
         this.title = spojnicaTitle.value;
       };
       spojnicaContainer.appendChild(spojnicaTitle);
+      this.renderPriorityEditor(spojnicaContainer);
     }
 
     this.renderTags(spojnicaContainer);
@@ -567,6 +604,22 @@ class Spojnica {
       this.open();
     };
 
+    const editButton = document.createElement("button");
+    editButton.className = "button editButton";
+    editButton.id = "editSpojnicaButton";
+    editButton.innerText = "✏️ Izmeni";
+    editButton.onclick = () => {
+      this.editMode();
+    };
+
+    const editPublishButton = document.createElement("button");
+    editPublishButton.className = "button editPublishButton";
+    editPublishButton.id = "publishEditsSpojnicaButton";
+    editPublishButton.innerText = "⬆️ Objavi izmene";
+    editPublishButton.onclick = () => {
+      this.handleSpojnicaEdit(this.exitEditMode);
+    };
+
     const exitButton = document.createElement("button");
     exitButton.className = "button exitButton";
     exitButton.innerText = "🏠 Nazad na početnu";
@@ -579,6 +632,8 @@ class Spojnica {
     actions.appendChild(exitButton);
     !this.isNew && actions.appendChild(addNewButton);
     !this.isNew && actions.appendChild(resetButton);
+    !this.isNew && !this.isEdit && actions.appendChild(editButton);
+    !this.isNew && this.isEdit && actions.appendChild(editPublishButton);
     this.isNew && actions.appendChild(publishSpojnicaButton);
 
     spojnicaContainer.appendChild(actions);

@@ -272,19 +272,35 @@ class Home {
     spojniceContainer.appendChild(title);
 
     /* Nova spojnica */
+
+    const actions = document.createElement("div");
+    actions.className = "singleQuestionActions";
+
     const newBtn = document.createElement("button");
     newBtn.className = "button newSpojnicaBtn";
     newBtn.innerHTML = "🆕 Nova spojnica";
     newBtn.style.marginBottom = "15px";
-    newBtn.addEventListener(
-      "click",
-      () => {
-        const newSpojnica = new Spojnica();
-        newSpojnica.novaSpojnica();
-      } /* TODO */
-    );
+    newBtn.addEventListener("click", () => {
+      const newSpojnica = new Spojnica();
+      newSpojnica.novaSpojnica();
+    });
 
-    spojniceContainer.appendChild(newBtn);
+    actions.appendChild(newBtn);
+
+    /* Sort button */
+    const sortBtn = document.createElement("button");
+    sortBtn.className = "button sortSpojnicaBtn";
+    sortBtn.innerHTML = "🔻";
+    sortBtn.style.marginBottom = "15px";
+    sortBtn.addEventListener("click", () => {
+      this.state.spojnice.sort((a, b) => {
+        return a.priority - b.priority;
+      });
+      this.render();
+    });
+
+    actions.appendChild(sortBtn);
+    spojniceContainer.appendChild(actions);
 
     /* Spojnice iz state-a */
     const spojnice = this.state.spojnice;
