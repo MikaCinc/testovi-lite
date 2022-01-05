@@ -68,6 +68,7 @@ class Spojnica {
 
   open() {
     this.isOpened = true;
+    document.getElementsByTagName("h1")[0].innerText = this.title;
     if (this.questions && this.questions.length) {
       this.start();
     } else {
@@ -81,6 +82,8 @@ class Spojnica {
 
   exit = () => {
     this.isOpened = false;
+    document.getElementsByTagName("h1")[0].innerText =
+      "Dobro došli na Testovi - Lite version";
     document.querySelector(".homeContainer").style.display = "block";
     document.getElementById("spojnicaContainer").innerHTML = "";
   };
@@ -462,9 +465,8 @@ class Spojnica {
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content
 
-    let spojnicaTitle;
     if (this.isNew) {
-      spojnicaTitle = document.createElement("input");
+      const spojnicaTitle = document.createElement("input");
       spojnicaTitle.id = "spojnicaTitle";
       spojnicaTitle.className = "input";
       spojnicaTitle.placeholder = "Naslov spojnice";
@@ -472,11 +474,8 @@ class Spojnica {
       spojnicaTitle.onchange = () => {
         this.title = spojnicaTitle.value;
       };
-    } else {
-      spojnicaTitle = document.createElement("h2");
-      spojnicaTitle.innerText = this.title;
+      spojnicaContainer.appendChild(spojnicaTitle);
     }
-    spojnicaContainer.appendChild(spojnicaTitle);
 
     this.renderTags(spojnicaContainer);
 

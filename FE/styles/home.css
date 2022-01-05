@@ -48,6 +48,7 @@
     display: inline-block;
     font-size: 16px !important;
     cursor: pointer;
+    margin: 0px 7px;
 }
 
 .deleteBtn:hover {
@@ -58,6 +59,8 @@
 .questionsContainer {
     display: flex;
     flex-direction: column;
+    max-width: 500px;
+    flex-wrap: wrap;
     padding: 10px;
 }
 
@@ -127,4 +130,12 @@
 
 .newSpojnicaBtn {
     margin-bottom: 10px;
+}
+
+@media (max-width: 500px) {
+    .homeContentContainer {
+        flex-direction: column-reverse !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
 }
