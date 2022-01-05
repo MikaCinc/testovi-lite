@@ -5,6 +5,8 @@
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 100px;
 }
 
 .spojnicaQuestions {

@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
             {
                 spojnica.DateCreated = DateTime.Now;
                 spojnica.Archived = false;
-                spojnica.Highlighted = false;
+                spojnica.Highlighted = true;
                 spojnica.Priority = 1;
                 spojnica.NumberOfGames = 0;
                 Context.Spojnice.Add(spojnica); // Ne upisuje odmah u DB
@@ -361,6 +361,8 @@ namespace WebAPI.Controllers
 
                 if (spojnica != null)
                 {
+                    Context.SpojniceTagovi.RemoveRange(Context.SpojniceTagovi.Where(s => s.Spojnica.ID == id));
+                    Context.SpojnicePitanja.RemoveRange(Context.SpojnicePitanja.Where(s => s.Spojnica.ID == id));
                     Context.Spojnice.Remove(spojnica);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                                                                         // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID

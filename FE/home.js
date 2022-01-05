@@ -12,6 +12,7 @@ class Home {
     this.handleNewTag = this.handleNewTag.bind(this);
     // this.handleTagDelete = this.handleTagDelete.bind(this);
     this.handleNewQuestion = this.handleNewQuestion.bind(this);
+    this.render = this.render.bind(this);
   }
 
   handleNewTag() {
@@ -138,7 +139,7 @@ class Home {
     newTagInput.setAttribute("placeholder", "Novi tag...");
     const submitButton = document.createElement("button");
     submitButton.className = "button newTagButton";
-    submitButton.innerHTML = "Dodaj tag";
+    submitButton.innerHTML = "➕ Dodaj tag";
     submitButton.addEventListener("click", this.handleNewTag);
 
     tagsContainer.appendChild(newTagInput);
@@ -221,7 +222,7 @@ class Home {
     /* Spojnice iz state-a */
     const spojnice = this.state.spojnice;
     spojnice.forEach((spojnica) => {
-      const s = new Spojnica(spojnica);
+      const s = new Spojnica(spojnica, this.render);
       s.renderTile(); // Posebna render metoda
     });
   }

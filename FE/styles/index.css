@@ -78,6 +78,7 @@ select {
     background-color: black;
     transition-duration: 0.4s;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 select:hover {
@@ -86,7 +87,7 @@ select:hover {
 }
 
 option {
-    color: var(--textColor);
+    color: var(--tagColor);
     background-color: black;
 }
 
@@ -94,12 +95,13 @@ option {
     background-color: black;
 } */
 
-option:checked {
+/* option:checked {
     background-color: var(--tagColor);
-}
+} */
 
 option:hover {
     background-color: var(--tagColor) !important;
+    color: black !important;
 }
 
 #tagsContainer {
@@ -116,7 +118,10 @@ option:hover {
     color: var(--tagColor);
     transition-duration: 0.4s;
     cursor: pointer;
-    display: inline-block;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .tag::before {

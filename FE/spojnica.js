@@ -2,12 +2,15 @@ import { shuffleArray, getApiURL } from "./common.js";
 import state from "./index.js";
 
 class Spojnica {
-  constructor(spojnica) {
+  constructor(spojnica, parentRender) {
     this.id = spojnica?.id || 0;
     this.title = spojnica?.title || "Nova spojnica";
     this.questions = spojnica?.pitanja || [];
     this.answers = [];
     this.tags = spojnica?.tagovi || [];
+    this.archived = spojnica?.archived || false;
+    this.highlighted = spojnica?.highlighted || false;
+    this.priority = spojnica?.priority || 1;
 
     this.completed = []; // id array of completed questions
     this.currentIndex = 0; // index of current question
@@ -16,10 +19,13 @@ class Spojnica {
 
     this.showNewQuestion = false;
     this.isOpened = false;
+    this.isNew = false;
+    this.isEdit = false;
 
     this.start = this.start.bind(this);
     this.render = this.render.bind(this);
     this.open = this.open.bind(this);
+    this.parentRender = parentRender;
   }
 
   checkAnswer() {
@@ -118,9 +124,13 @@ class Spojnica {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        /* if (data?.id) {
-          this.render();
-        } */
+        if (data?.id) {
+          if (data.pitanja && data.pitanja.length) {
+            this.questions.push(data.pitanja[0].pitanje);
+            console.log(this.questions);
+          }
+          this.open();
+        }
       })
       .catch((err) => {});
 
@@ -143,9 +153,13 @@ class Spojnica {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        /* if (data?.id) {
-          this.render();
-        } */
+        if (data?.id) {
+          if (data.pitanja && data.pitanja.length) {
+            this.questions.push(data.pitanja[0].pitanje);
+            console.log(this.questions);
+          }
+          this.open();
+        }
       })
       .catch((err) => {});
   };
@@ -201,11 +215,55 @@ class Spojnica {
       .then((data) => {
         console.log(data);
         if (data?.id) {
-          this.pitanja = this.pitanja.filter(
-            (pitanje) => pitanje.id !== pitanjeId
-          );
+          this.questions = this.questions.filter((q) => q.id !== pitanjeId);
           this.open();
           // this.render();
+        }
+      })
+      .catch((err) => {});
+  };
+
+  handleSpojnicaDelete = () => {
+    fetch(getApiURL() + "Spojnica/IzbrisiSpojnicu/" + this.id, {
+      method: "delete",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          const el = document.getElementById(
+            "singleSpojnicaContainer-" + this.id
+          );
+          console.log(el);
+          el.remove();
+        }
+      })
+      .catch((err) => {});
+  };
+
+  handleSpojnicaEdit = () => {
+    fetch(getApiURL() + "Spojnica/PromeniSpojnicu", {
+      method: "put",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({
+        id: this.id,
+        title: this.title,
+        highlighted: this.highlighted,
+        archived: this.archived,
+        priority: this.priority,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          // this.parentRender();
+          this.renderTile();
         }
       })
       .catch((err) => {});
@@ -294,7 +352,7 @@ class Spojnica {
       container.appendChild(tagsContainer);
     }
 
-    if (this.isOpened) {
+    if (this.isOpened && !this.isNew) {
       const select = document.createElement("select");
       select.id = "newTagSelect";
       select.className = "select";
@@ -318,12 +376,50 @@ class Spojnica {
 
   novaSpojnica() {
     /* TODO */
+    this.isOpened = true;
+    this.isNew = true;
+    this.render();
   }
+
+  publishSpojnica = () => {
+    fetch(getApiURL() + "Spojnica/DodajSpojnicu", {
+      method: "post",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify({
+        title: this.title,
+        archived: false,
+        highlighted: true,
+        numberOfGames: 0,
+        priority: 1,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.id) {
+          this.id = data.id;
+          this.isNew = false;
+          this.open();
+          // this.render();
+        }
+      })
+      .catch((err) => {});
+  };
 
   renderTile() {
     const spojniceContainer = document.querySelector(".spojniceContainer");
-    const spojnicaElement = document.createElement("div");
+    let spojnicaElement = document.getElementById(
+      "singleSpojnicaContainer-" + this.id
+    );
+    if (!spojnicaElement) {
+      spojnicaElement = document.createElement("div");
+      spojniceContainer.appendChild(spojnicaElement);
+    }
+    spojnicaElement.innerHTML = ""; // reset
     spojnicaElement.className = "singleSpojnicaContainer";
+    spojnicaElement.id = "singleSpojnicaContainer-" + this.id;
 
     const titleP = document.createElement("p");
     titleP.className = "questionText";
@@ -337,20 +433,28 @@ class Spojnica {
     openButton.innerHTML = "▶️ Otvori";
     openButton.addEventListener("click", this.open);
 
-    const showButton = document.createElement("button");
-    showButton.className = "button showButton";
-    showButton.innerHTML = "👁️‍🗨️Prikaži";
-    /* showButton.addEventListener("click", () => {
-      answerInput.value = this.question.answer;
-    }); */
+    const highlightButton = document.createElement("button");
+    highlightButton.className = "button highlightButton";
+    highlightButton.innerHTML = this.highlighted ? "❌ Unpin" : "📌 Istakni";
+    highlightButton.addEventListener("click", () => {
+      this.highlighted = !this.highlighted;
+      this.handleSpojnicaEdit();
+    });
 
     const actions = document.createElement("div");
     actions.className = "singleQuestionActions";
     actions.appendChild(openButton);
-    actions.appendChild(showButton);
+    actions.appendChild(highlightButton);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "🗑️";
+    deleteBtn.className = "button deleteQuestionBtn";
+    deleteBtn.addEventListener("click", () =>
+      this.handleSpojnicaDelete(this.id)
+    );
 
     spojnicaElement.appendChild(actions);
-    spojniceContainer.appendChild(spojnicaElement);
+    spojnicaElement.appendChild(deleteBtn);
   }
 
   render() {
@@ -358,8 +462,20 @@ class Spojnica {
     const spojnicaContainer = document.getElementById("spojnicaContainer");
     spojnicaContainer.innerHTML = ""; // reset previous content
 
-    const spojnicaTitle = document.createElement("h2");
-    spojnicaTitle.innerText = this.title;
+    let spojnicaTitle;
+    if (this.isNew) {
+      spojnicaTitle = document.createElement("input");
+      spojnicaTitle.id = "spojnicaTitle";
+      spojnicaTitle.className = "input";
+      spojnicaTitle.placeholder = "Naslov spojnice";
+      spojnicaTitle.value = this.title;
+      spojnicaTitle.onchange = () => {
+        this.title = spojnicaTitle.value;
+      };
+    } else {
+      spojnicaTitle = document.createElement("h2");
+      spojnicaTitle.innerText = this.title;
+    }
     spojnicaContainer.appendChild(spojnicaTitle);
 
     this.renderTags(spojnicaContainer);
@@ -407,7 +523,7 @@ class Spojnica {
         deleteBtn.addEventListener("click", () =>
           this.handleQuestionDelete(question.id)
         );
-        
+
         row.appendChild(deleteBtn);
         row.appendChild(questionItem);
         row.appendChild(answerItem);
@@ -419,9 +535,23 @@ class Spojnica {
 
     const addNewButton = document.createElement("div");
     addNewButton.className = "button addNewButton";
-    addNewButton.innerText = "Dodaj novo pitanje";
+    addNewButton.innerText = "➕ Dodaj novo pitanje";
     addNewButton.onclick = () => {
       this.showAddNewQuestion();
+    };
+
+    const publishSpojnicaButton = document.createElement("button");
+    publishSpojnicaButton.className = "button publishSpojnicaButton";
+    publishSpojnicaButton.innerText = "✅ Objavi spojnicu";
+    publishSpojnicaButton.onclick = () => {
+      this.publishSpojnica();
+    };
+
+    const resetButton = document.createElement("button");
+    resetButton.className = "button resetButton";
+    resetButton.innerText = "⭕ Resetuj";
+    resetButton.onclick = () => {
+      this.open();
     };
 
     const exitButton = document.createElement("button");
@@ -430,7 +560,9 @@ class Spojnica {
     exitButton.onclick = () => {
       this.exit();
     };
-    spojnicaContainer.appendChild(addNewButton);
+    !this.isNew && spojnicaContainer.appendChild(addNewButton);
+    !this.isNew && spojnicaContainer.appendChild(resetButton);
+    this.isNew && spojnicaContainer.appendChild(publishSpojnicaButton);
     spojnicaContainer.appendChild(exitButton);
   }
 }
