@@ -108,6 +108,72 @@ class Home {
       .catch((err) => {});
   }
 
+  renderSettings() {
+    const container = document.querySelector(".homeContentContainer");
+    const settingsContainer = document.createElement("div");
+    settingsContainer.className = "settingsContainer";
+
+    const title = document.createElement("h3");
+    title.innerHTML = "Podešavanja";
+    settingsContainer.appendChild(title);
+
+    const primaryP = document.createElement("p");
+    primaryP.innerHTML = "Primary boja:";
+    primaryP.style.color = "var(--primary)";
+    settingsContainer.appendChild(primaryP);
+
+    const primary = document.createElement("input");
+    primary.className = "primaryColorInput";
+    primary.setAttribute("type", "color");
+    primary.setAttribute(
+      "value",
+      getComputedStyle(document.documentElement).getPropertyValue("--primary")
+    );
+    primary.addEventListener("change", () => {
+      document.documentElement.style.setProperty("--primary", primary.value);
+    });
+    settingsContainer.appendChild(primary);
+
+    const secondaryP = document.createElement("p");
+    secondaryP.innerHTML = "Secondary boja:";
+    secondaryP.style.color = "var(--secondary)";
+    settingsContainer.appendChild(secondaryP);
+
+    const secondary = document.createElement("input");
+    secondary.className = "secondaryColorInput";
+    secondary.setAttribute("type", "color");
+    secondary.setAttribute(
+      "value",
+      getComputedStyle(document.documentElement).getPropertyValue("--secondary")
+    );
+    secondary.addEventListener("change", () => {
+      document.documentElement.style.setProperty(
+        "--secondary",
+        secondary.value
+      );
+    });
+    settingsContainer.appendChild(secondary);
+
+    const tagP = document.createElement("p");
+    tagP.innerHTML = "Boja tagova:";
+    tagP.style.color = "var(--tagColor)";
+    settingsContainer.appendChild(tagP);
+
+    const tag = document.createElement("input");
+    tag.className = "tagColorInput";
+    tag.setAttribute("type", "color");
+    tag.setAttribute(
+      "value",
+      getComputedStyle(document.documentElement).getPropertyValue("--tagColor")
+    );
+    tag.addEventListener("change", () => {
+      document.documentElement.style.setProperty("--tagColor", tag.value);
+    });
+    settingsContainer.appendChild(tag);
+
+    container.appendChild(settingsContainer);
+  }
+
   renderTags() {
     const container = document.querySelector(".homeContentContainer");
     const tagsContainer = document.createElement("div");
@@ -260,6 +326,7 @@ class Home {
     this.renderSpojnice();
     this.renderQuestions();
     this.renderTags();
+    this.renderSettings();
   }
 }
 

@@ -4,8 +4,8 @@
 
 :root {
     /* --primary: #007fd4; */
-    --primary: cyan;
-    --secondary: orangered;
+    --primary: #00FFFF;
+    --secondary: #ff4500;
     --current: #00ff00;
     --error: red;
     --tagColor: #00ff00;

@@ -131,6 +131,8 @@ namespace WebAPI.Controllers
                     p.Title = spojnica.Title;
                     p.Archived = spojnica.Archived;
                     p.Highlighted = spojnica.Highlighted;
+                    p.NumberOfGames = spojnica.NumberOfGames;
+                    p.Priority = spojnica.Priority;
 
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                     return Ok(spojnica); // DB ažurira i model pa sada znamo ID

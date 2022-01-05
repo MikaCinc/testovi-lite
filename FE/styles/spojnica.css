@@ -37,7 +37,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px dashed var(--primary);
+    border: 2px dashed var(--primary);
     border-radius: 5px;
     /* background-color: var(--primary); */
     color: var(--textColor);
@@ -58,7 +58,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px dashed var(--secondary);
+    border: 2px dashed var(--secondary);
     border-radius: 5px;
     /* background-color: var(--primary); */
     color: var(--textColor);
@@ -80,7 +80,7 @@
     border: 0px dashed var(--current) !important;
     color: var(--textColor) !important;
     transition-duration: 0.4s;
-    /* border: 1px solid var(--primary) !important;
+    /* border: 2px solid var(--primary) !important;
     color: var(--primary) !important; */
 }
 
@@ -91,7 +91,7 @@
 .correctQuestion {
     background: linear-gradient(to top right, transparent, var(--primary)) !important;
     color: var(--textColor) !important;
-    border: 1px solid var(--primary) !important;
+    border: 2px solid var(--primary) !important;
 }
 
 .correctQuestion::before {
@@ -99,7 +99,7 @@
 }
 
 .incorrectQuestion {
-    border: 1px dashed var(--error) !important;
+    border: 2px dashed var(--error) !important;
 }
 
 .incorrectQuestion::before {
@@ -108,7 +108,7 @@
 
 .correctAnswer {
     background: linear-gradient(to top right, transparent, var(--secondary)) !important;
-    border: 1px solid var(--secondary) !important;
+    border: 2px solid var(--secondary) !important;
     cursor: block !important;
 }
 
