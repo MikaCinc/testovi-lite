@@ -12,6 +12,10 @@
     align-items: center;
 }
 
+.searchInput {
+    margin: 0px !important;
+}
+
 .submitButton {
     margin: 5px;
 }

@@ -177,7 +177,7 @@ class Home {
 
     const submitButton = document.createElement("button");
     submitButton.className = "button newQuestionButton";
-    submitButton.innerHTML = "Dodaj pitanje";
+    submitButton.innerHTML = "➕ Dodaj pitanje";
     submitButton.addEventListener("click", this.handleNewQuestion);
 
     actions.appendChild(submitButton);
@@ -209,6 +209,7 @@ class Home {
     const newBtn = document.createElement("button");
     newBtn.className = "button newSpojnicaBtn";
     newBtn.innerHTML = "🆕 Nova spojnica";
+    newBtn.style.marginBottom = "15px";
     newBtn.addEventListener(
       "click",
       () => {

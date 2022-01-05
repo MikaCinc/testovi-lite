@@ -300,11 +300,6 @@ class Spojnica {
       this.addNewQuestion(question, answer);
     };
 
-    newContainer.appendChild(questionInput);
-    newContainer.appendChild(answerInput);
-    newContainer.appendChild(addNewQuestionButton);
-    spojnicaContainer.appendChild(newContainer);
-
     const select = document.createElement("select");
     select.id = "newQuestionSelect";
     select.className = "select";
@@ -331,6 +326,10 @@ class Spojnica {
     };
 
     newContainer.appendChild(select);
+    newContainer.appendChild(questionInput);
+    newContainer.appendChild(answerInput);
+    newContainer.appendChild(addNewQuestionButton);
+    spojnicaContainer.appendChild(newContainer);
   }
 
   renderTags(container) {
@@ -559,10 +558,15 @@ class Spojnica {
     exitButton.onclick = () => {
       this.exit();
     };
-    !this.isNew && spojnicaContainer.appendChild(addNewButton);
-    !this.isNew && spojnicaContainer.appendChild(resetButton);
-    this.isNew && spojnicaContainer.appendChild(publishSpojnicaButton);
-    spojnicaContainer.appendChild(exitButton);
+
+    const actions = document.createElement("div");
+    actions.className = "spojnicaActions";
+    !this.isNew && actions.appendChild(addNewButton);
+    !this.isNew && actions.appendChild(resetButton);
+    this.isNew && actions.appendChild(publishSpojnicaButton);
+    actions.appendChild(exitButton);
+
+    spojnicaContainer.appendChild(actions);
   }
 }
 

@@ -32,7 +32,8 @@ body {
     /* background: linear-gradient(to bottom, #323232 0%, #3F3F3F 40%, #1C1C1C 150%), linear-gradient(to top, rgba(255, 255, 255, 0.40) 0%, rgba(0, 0, 0, 0.25) 200%);
     background-blend-mode: multiply; */
 
-    background-color: black;
+    background: linear-gradient(to bottom left, black 92%, var(--tagColor));
+    background-attachment: fixed;
 }
 
 h1 {
@@ -54,6 +55,7 @@ h1 {
     text-transform: uppercase;
     background-color: transparent;
     margin: 3px;
+    width: fit-content;
 }
 
 .button:hover {
@@ -69,6 +71,7 @@ input {
     color: var(--primary);
     background-color: transparent;
     transition-duration: 0.4s;
+    margin-bottom: 5px;
 }
 
 select {
