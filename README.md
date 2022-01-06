@@ -4,7 +4,7 @@
 
 ## [Testovi - Full edition](https://testovi-inc.netlify.app/)
 
-[Mihajlo - Portfolio](https://www.mihajlo.engineer/)
+## [Mihajlo - Portfolio](https://www.mihajlo.engineer/)
 
 Testovi Lite sadrže 3 glavna entiteta:
 
@@ -52,6 +52,7 @@ Moguće je unošenje i provera odgovora i prikazivanje tačnog odgovora na svako
 ## Tagovi
 
 ![Tag CRUD](Slike/t_crud.jpg)
+
 Tagovi od atributa imaju samo ID i Title
 
 Na homepage-u imaju posebnu kolonu gde je moguće brisati i dodavati novi tag.
@@ -68,5 +69,6 @@ U odeljku "Podešavanja" moguće je menjati boje:
 - Primarnu
 - Sekundarnu
 - Boju tagova
-  Pošto su u css-u na svim ključnim mestima umesto hardkodiranih vrednosti korišćene
-  css varijable, ovu funkcionalnost je vrlo lako implementirati.
+
+Pošto su u css-u na svim ključnim mestima umesto hardkodiranih vrednosti korišćene
+css varijable, ovu funkcionalnost je vrlo lako implementirati.
