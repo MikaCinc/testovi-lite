@@ -48,4 +48,22 @@ Moguće je unošenje i provera odgovora i prikazivanje tačnog odgovora na svako
 "Pregledu" pitanja i to takođe kontroliše odgovarajuća JS klasa za pitanje.
 
 ## Tagovi
-Tagovi 
+
+Tagovi od atributa imaju samo ID i Title
+![Tag CRUD](Slike/t_crud.jpg)
+
+Na homepage-u imaju posebnu kolonu gde je moguće brisati i dodavati novi tag.
+Klikom na svaki od tagova vrši se poziv API metode za preuzimanje samo spojnica
+koje sadrže taj tag.
+
+## Ostale funkcionalnosti
+
+Osim filtriranja po tagovima, moguće je i pretraživanje spojnica po imenu.
+Search box se nalazi na vrhu homepage-a. Unošenjem pojma i klikom na dugme "Pretraži" poziva se posebna metoda iz SearchController-a i preuzimaju se sve spojnice koje sadrže taj termin u svom imenu.
+
+U odeljku "Podešavanja" moguće je menjati boje:
+- Primarnu
+- Sekundarnu
+- Boju tagova
+Pošto su u css-u na svim ključnim mestima umesto hardkodiranih vrednosti korišćene
+css varijable, ovu funkcionalnost je vrlo lako implementirati.
