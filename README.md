@@ -14,13 +14,16 @@ Testovi Lite sadrže 4 glavna entiteta:
 - Tag
 
 ## Set
+
 Set je osnovni entitet i služi kao jedna celina za niz spojnica, niz pitanja i niz tagova.
 Setovi imaju svoj container odmah ispod search box-a, gde klikom na jedan od setova
 automatski fetchujemo sva njegova pitanja, spojnice i tagove.
 Postoje 3 pomoćne tabele:
+
 - SetPitanja
 - SetSpojnice
 - SetTagovi
+
 koje služe da povežu setove sa svojim sadržajem.
 
 ## Spojnica
@@ -74,6 +77,8 @@ koje sadrže taj tag.
 
 Osim filtriranja po tagovima, moguće je i pretraživanje spojnica po imenu.
 Search box se nalazi na vrhu homepage-a. Unošenjem pojma i klikom na dugme "Pretraži" poziva se posebna metoda iz SearchController-a i preuzimaju se sve spojnice koje sadrže taj termin u svom imenu.
+
+![Search i Setovi CRUD](Slike/search_set_crud.jpg)
 
 U odeljku "Podešavanja" moguće je menjati boje:
 
