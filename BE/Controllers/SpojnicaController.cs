@@ -78,6 +78,7 @@ namespace WebAPI.Controllers
 
             var spojnice = await Context.SetSpojnice
             .Where(x => x.Set.ID == setId)
+            .Where(x => x.Spojnica.Highlighted == true)
             .Include(x => x.Spojnica.Tagovi)
             .ThenInclude(x => x.Tag)
             .Include(x => x.Spojnica.Pitanja)
@@ -307,7 +308,7 @@ namespace WebAPI.Controllers
             {
                 var foundPitanje = Context.Pitanja.Where(t => t.ID == pitanje.ID).FirstOrDefault(); // var menja bilo koji tip
                 var foundSpojnica = Context.Spojnice.Where(s => s.ID == spojnicaId).FirstOrDefault(); // var menja bilo koji tip
-                var foundSet = Context.SetSpojnice.Where(s => s.Spojnica.ID == spojnicaId).FirstOrDefault().Set; // var menja bilo koji tip
+                var foundSet = Context.SetSpojnice.Where(s => s.Spojnica.ID == spojnicaId).Select(s => s.Set).FirstOrDefault(); // var menja bilo koji tip
 
                 if (foundSet == null)
                 {
@@ -365,7 +366,7 @@ namespace WebAPI.Controllers
                         SetPitanja sp = new SetPitanja
                         {
                             Set = foundSet,
-                            Pitanje = foundPitanje
+                            Pitanje = pitanje
                         };
                         Context.SetPitanja.Add(sp);
 

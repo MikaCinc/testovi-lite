@@ -67,16 +67,18 @@ namespace WebAPI.Controllers
             return Ok(spojnice);
         }
 
-        [Route("PreuzmiSpojnicePoNazivu/{naziv}")]
+        [Route("PreuzmiSpojnicePoNazivu/{naziv}/{setId}")]
         [HttpGet]
-        public async Task<ActionResult> PreuzmiSpojnicePoNazivu(string naziv)
+        public async Task<ActionResult> PreuzmiSpojnicePoNazivu(string naziv, int setId)
         {
-            var spojnice = await Context.Spojnice
-            .OrderByDescending(x => x.DateCreated)
-            .Include(x => x.Tagovi)
+            var spojnice = await Context.SetSpojnice
+            .Where(x => x.Set.ID == setId)
+            .Include(x => x.Spojnica.Tagovi)
             .ThenInclude(x => x.Tag)
-            .Include(x => x.Pitanja)
+            .Include(x => x.Spojnica.Pitanja)
             .ThenInclude(x => x.Pitanje)
+            .Select(x => x.Spojnica)
+            .OrderByDescending(x => x.DateCreated)
             .Select(p => new
             {
                 p.ID,

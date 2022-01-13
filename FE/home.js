@@ -126,9 +126,11 @@ class Home {
 
   fetchSpojniceByString = () => {
     let value = document.querySelector("#searchInput").value;
-    if (value.length < 3) return;
+    if (value.length < 3) return alert("Unesite više od 2 slova");
 
-    fetch(getApiURL() + "Search/PreuzmiSpojnicePoNazivu/" + value)
+    fetch(
+      getApiURL() + `Search/PreuzmiSpojnicePoNazivu/${value}/${this.currentSet}`
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -402,7 +404,7 @@ class Home {
     const searchInput = document.createElement("input");
     searchInput.id = "searchInput";
     searchInput.setAttribute("type", "text");
-    searchInput.setAttribute("placeholder", "Pretraži pitanja i spojnice");
+    searchInput.setAttribute("placeholder", "Pretraži spojnice");
 
     const submitButton = document.createElement("button");
     submitButton.className = "button submitButton";

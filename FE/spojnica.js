@@ -168,7 +168,7 @@ class Spojnica {
 
   addExistingQuestion = (id) => {
     const question = state.pitanja.find((pitanje) => pitanje.id === +id);
-    console.log(question);
+    console.log("addExistingQuestion -> preSlanja", question);
     if (!question || !question.id) return;
     fetch(getApiURL() + "Spojnica/DodajPitanje/" + this.id, {
       method: "put",
@@ -207,6 +207,7 @@ class Spojnica {
           let noviTag = state.tagovi.find((tag) => tag.id === +tagId);
           this.tags.push(noviTag);
           this.render();
+          this.renderTile(true);
         }
       })
       .catch((err) => {});
@@ -225,6 +226,7 @@ class Spojnica {
         if (data?.id) {
           this.tags = this.tags.filter((tag) => tag.id !== tagId);
           this.render();
+          this.renderTile(true);
         }
       })
       .catch((err) => {});
