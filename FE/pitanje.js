@@ -40,7 +40,7 @@ class Pitanje {
 
     const checkButton = document.createElement("button");
     checkButton.className = "button checkButton";
-    checkButton.innerHTML = "Proveri";
+    checkButton.innerHTML = "🧪 Proveri";
     checkButton.addEventListener("click", () => {
       if (
         answerInput.value.toLowerCase() === this.question.answer.toLowerCase()

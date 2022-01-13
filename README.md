@@ -6,11 +6,22 @@
 
 ## [Mihajlo - Portfolio](https://www.mihajlo.engineer/)
 
-Testovi Lite sadrže 3 glavna entiteta:
+Testovi Lite sadrže 4 glavna entiteta:
 
+- Set
 - Spojnica
 - Pitanje
 - Tag
+
+## Set
+Set je osnovni entitet i služi kao jedna celina za niz spojnica, niz pitanja i niz tagova.
+Setovi imaju svoj container odmah ispod search box-a, gde klikom na jedan od setova
+automatski fetchujemo sva njegova pitanja, spojnice i tagove.
+Postoje 3 pomoćne tabele:
+- SetPitanja
+- SetSpojnice
+- SetTagovi
+koje služe da povežu setove sa svojim sadržajem.
 
 ## Spojnica
 

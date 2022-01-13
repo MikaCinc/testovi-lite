@@ -483,7 +483,7 @@ class Spojnica {
 
     const noOfGamesP = document.createElement("p");
     noOfGamesP.className = "questionText";
-    noOfGamesP.innerHTML = "▶️ " + this.numberOfGames + " 🔺" + this.priority;
+    noOfGamesP.innerHTML = "▶️ " + this.numberOfGames + " 🔺" + this.priority + " ❓" + this.questions.length;
     spojnicaElement.appendChild(noOfGamesP);
 
     const openButton = document.createElement("button");
