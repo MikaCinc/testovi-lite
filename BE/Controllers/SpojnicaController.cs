@@ -67,6 +67,47 @@ namespace WebAPI.Controllers
             return Ok(spojnice);
         }
 
+        [Route("PreuzmiSpojnice/{setId}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiSpojniceIzSeta(int setId)
+        {
+            var spojnice = await Context.SetSpojnice
+            // .Where(s => s.Highlighted == true)
+            .Where(s => s.Set.ID == setId)
+            .Select(s => s.Spojnica)
+            .OrderByDescending(x => x.DateCreated)
+            .Include(x => x.Tagovi)
+            .ThenInclude(x => x.Tag)
+            .Include(x => x.Pitanja)
+            .ThenInclude(x => x.Pitanje)
+            .Select(p => new
+            {
+                p.ID,
+                p.Title,
+                p.Archived,
+                p.Highlighted,
+                p.Priority,
+                p.NumberOfGames,
+                p.DateCreated,
+                Tagovi = p.Tagovi.Select(t => new
+                {
+                    t.Tag.ID,
+                    t.Tag.Title
+                }),
+                Pitanja = p.Pitanja.Select(t => new
+                {
+                    t.Pitanje.ID,
+                    t.Pitanje.Question,
+                    t.Pitanje.Answer,
+                    t.Pitanje.isArchived,
+                    t.Pitanje.Highlighted,
+                    t.Pitanje.DateCreated,
+                })
+            })
+            .ToListAsync();
+            return Ok(spojnice);
+        }
+
         [Route("PreuzmiSpojnicu/{index}")]
         [HttpGet]
         public async Task<ActionResult> PreuzmiSpojnicu(int index)
@@ -82,23 +123,34 @@ namespace WebAPI.Controllers
             return Ok(spojnica[0]);
         }
 
-        [Route("DodajSpojnicu")]
+        [Route("DodajSpojnicu/{setId}")]
         [HttpPost]
-        public async Task<ActionResult> DodajSpojnicu([FromBody] Spojnica spojnica)
+        public async Task<ActionResult> DodajSpojnicu([FromBody] Spojnica spojnica, int setId)
         {
             if (string.IsNullOrWhiteSpace(spojnica.Title) || spojnica.Title.Length > 100)
             {
                 return BadRequest("Ne valja Title...");
             }
 
+            if (setId < 0)
+            {
+                return BadRequest("Ne valja SetId...");
+            }
+
             try
             {
+                var set = await Context.Setovi.FindAsync(setId);
+                if (set == null)
+                {
+                    return BadRequest("Set not found...");
+                }
                 spojnica.DateCreated = DateTime.Now;
                 spojnica.Archived = false;
                 spojnica.Highlighted = true;
                 spojnica.Priority = spojnica.Priority;
                 spojnica.NumberOfGames = 0;
                 Context.Spojnice.Add(spojnica); // Ne upisuje odmah u DB
+                Context.SetSpojnice.Add(new SetSpojnice { Set = set, Spojnica = spojnica });
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                                                                     // return Ok($"Sve je u redu! ID novog pitanja je: {spojnica.ID}"); // DB ažurira i model pa sada znamo ID
                 return Ok(spojnica); // DB ažurira i model pa sada znamo ID
@@ -251,6 +303,12 @@ namespace WebAPI.Controllers
             {
                 var foundPitanje = Context.Pitanja.Where(t => t.ID == pitanje.ID).FirstOrDefault(); // var menja bilo koji tip
                 var foundSpojnica = Context.Spojnice.Where(s => s.ID == spojnicaId).FirstOrDefault(); // var menja bilo koji tip
+                var foundSet = Context.SetSpojnice.Where(s => s.Spojnica.ID == spojnicaId).FirstOrDefault().Set; // var menja bilo koji tip
+
+                if (foundSet == null)
+                {
+                    return BadRequest("Set nije pronađen!");
+                }
 
                 if (foundSpojnica != null)
                 {
@@ -265,6 +323,13 @@ namespace WebAPI.Controllers
                                 Pitanje = foundPitanje
                             };
                             Context.SpojnicePitanja.Add(s);
+
+                            /* SetPitanja sp = new SetPitanja
+                            {
+                                Set = foundSet,
+                                Pitanje = foundPitanje
+                            };
+                            Context.SetPitanja.Add(sp); */
                             int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                             return Ok(foundSpojnica); // DB ažurira i model pa sada znamo ID
                         }
@@ -292,6 +357,14 @@ namespace WebAPI.Controllers
                             Pitanje = pitanje
                         };
                         Context.SpojnicePitanja.Add(s);
+
+                        SetPitanja sp = new SetPitanja
+                        {
+                            Set = foundSet,
+                            Pitanje = foundPitanje
+                        };
+                        Context.SetPitanja.Add(sp);
+
                         int successCode = await Context.SaveChangesAsync();
                         return Ok(foundSpojnica);
                     }
@@ -366,6 +439,7 @@ namespace WebAPI.Controllers
                 {
                     Context.SpojniceTagovi.RemoveRange(Context.SpojniceTagovi.Where(s => s.Spojnica.ID == id));
                     Context.SpojnicePitanja.RemoveRange(Context.SpojnicePitanja.Where(s => s.Spojnica.ID == id));
+                    Context.SetSpojnice.RemoveRange(Context.SetSpojnice.Where(s => s.Spojnica.ID == id));
                     Context.Spojnice.Remove(spojnica);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                                                                         // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID

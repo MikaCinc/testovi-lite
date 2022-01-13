@@ -35,6 +35,17 @@ namespace WebAPI.Controllers
             return Ok(Context.Tagovi);
         }
 
+        [Route("PreuzmiTagove/{setId}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiTagoveIzSeta(int setId)
+        {
+            if (setId < 0)
+            {
+                return BadRequest("Ne valja SetId...");
+            }
+            return Ok(Context.SetTagovi.Where(t => t.Set.ID == setId).Select(t => t.Tag));
+        }
+
         [Route("PreuzmiTag/{index}")]
         [HttpGet]
         public async Task<ActionResult> PreuzmiTag(int index)
@@ -50,18 +61,29 @@ namespace WebAPI.Controllers
             return Ok(tag[0]);
         }
 
-        [Route("DodajTag")]
+        [Route("DodajTag/{setId}")]
         [HttpPost]
-        public async Task<ActionResult> DodajTag([FromBody] Tag tag)
+        public async Task<ActionResult> DodajTag([FromBody] Tag tag, int setId)
         {
             if (string.IsNullOrWhiteSpace(tag.Title) || tag.Title.Length > 50)
             {
                 return BadRequest("Ne valja Title...");
             }
 
+            if (setId < 0)
+            {
+                return BadRequest("Ne valja SetId...");
+            }
+
             try
             {
+                var set = await Context.Setovi.Where(p => p.ID == setId).FirstOrDefaultAsync();
+                if (set == null)
+                {
+                    return BadRequest("Ne postoji set sa tim ID-jem...");
+                }
                 Context.Tagovi.Add(tag); // Ne upisuje odmah u DB
+                Context.SetTagovi.Add(new SetTagovi { Set = set, Tag = tag });
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                 // return Ok($"Sve je u redu! ID novog taga je: {tag.ID}"); // DB ažurira i model pa sada znamo ID
                 return Ok(tag); // DB ažurira i model pa sada znamo ID
@@ -127,6 +149,7 @@ namespace WebAPI.Controllers
                 if (tag != null)
                 {
                     Context.SpojniceTagovi.RemoveRange(Context.SpojniceTagovi.Where(s => s.Tag.ID == id));
+                    Context.SetTagovi.RemoveRange(Context.SetTagovi.Where(s => s.Tag.ID == id));
                     Context.Tagovi.Remove(tag);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                     // return Ok($"Tag ID = {tag.ID} | Title = {tag.Title} je uspešno izbrisan!"); // DB ažurira i model pa sada znamo ID

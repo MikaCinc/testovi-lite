@@ -36,6 +36,16 @@ namespace WebAPI.Controllers
             return Ok(pitanja);
         }
 
+        [Route("PreuzmiPitanja/{setId}")]
+        [HttpGet]
+        public async Task<ActionResult> PreuzmiPitanjaIzSeta(int setId)
+        {
+            var pitanja = await Context.SetPitanja
+            .Where(x => x.Set.ID == setId).Select(x => x.Pitanje)
+            .OrderByDescending(x => x.DateCreated).ToListAsync();
+            return Ok(pitanja);
+        }
+
         [Route("PreuzmiPitanje/{index}")]
         [HttpGet]
         public async Task<ActionResult> PreuzmiPitanje(int index)
@@ -51,9 +61,9 @@ namespace WebAPI.Controllers
             return Ok(pitanje[0]);
         }
 
-        [Route("DodajPitanje")]
+        [Route("DodajPitanje/setId")]
         [HttpPost]
-        public async Task<ActionResult> DodajPitanje([FromBody] Pitanje pitanje)
+        public async Task<ActionResult> DodajPitanje([FromBody] Pitanje pitanje, int setId)
         {
             if (string.IsNullOrWhiteSpace(pitanje.Question) || pitanje.Question.Length > 100)
             {
@@ -64,10 +74,21 @@ namespace WebAPI.Controllers
                 return BadRequest("Ne valja Odgovor...");
             }
 
+            if (setId < 0)
+            {
+                return BadRequest("Ne valja SetID...");
+            }
+
             try
             {
+                var set = await Context.Setovi.Where(p => p.ID == setId).FirstOrDefaultAsync();
+                if (set == null)
+                {
+                    return BadRequest("Ne postoji set sa tim ID-jem...");
+                }
                 pitanje.DateCreated = DateTime.Now;
                 Context.Pitanja.Add(pitanje); // Ne upisuje odmah u DB
+                Context.SetPitanja.Add(new SetPitanja { Pitanje = pitanje, Set = set });
                 int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                 // return Ok($"Sve je u redu! ID novog pitanja je: {pitanje.ID}"); // DB ažurira i model pa sada znamo ID
                 return Ok(pitanje); // DB ažurira i model pa sada znamo ID
@@ -140,6 +161,7 @@ namespace WebAPI.Controllers
                 if (pitanje != null)
                 {
                     Context.SpojnicePitanja.RemoveRange(Context.SpojnicePitanja.Where(s => s.Pitanje.ID == id));
+                    Context.SetPitanja.RemoveRange(Context.SetPitanja.Where(s => s.Pitanje.ID == id));
                     Context.Pitanja.Remove(pitanje);
                     int successCode = await Context.SaveChangesAsync(); // Sada se upisuje u DB
                     // return Ok($"Pitanje ID = {pitanje.ID} | Question = {pitanje.Question} je uspešno izbrisano!"); // DB ažurira i model pa sada znamo ID
