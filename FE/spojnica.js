@@ -2,7 +2,7 @@ import { shuffleArray, getApiURL } from "./common.js";
 import state from "./index.js";
 
 class Spojnica {
-  constructor(spojnica, parentRender) {
+  constructor(spojnica, parentRender, setId) {
     this.id = spojnica?.id || 0;
     this.title = spojnica?.title || "Nova spojnica";
     this.questions = spojnica?.pitanja || [];
@@ -28,6 +28,8 @@ class Spojnica {
     this.render = this.render.bind(this);
     this.open = this.open.bind(this);
     this.parentRender = parentRender;
+
+    this.currentSet = setId;
   }
 
   checkAnswer() {
@@ -422,15 +424,16 @@ class Spojnica {
     }
   }
 
-  novaSpojnica() {
+  novaSpojnica(setId) {
     /* TODO */
     this.isOpened = true;
     this.isNew = true;
+    this.currentSet = setId;
     this.render();
   }
 
   publishSpojnica = () => {
-    fetch(getApiURL() + "Spojnica/DodajSpojnicu", {
+    fetch(getApiURL() + "Spojnica/DodajSpojnicu/" + this.currentSet, {
       method: "post",
       headers: new Headers({
         "Content-Type": "application/json",

@@ -1,4 +1,4 @@
-import { getApiURL } from "./common.js";
+import { getApiURL, fetchAllDataInSet } from "./common.js";
 import Pitanje from "./pitanje.js";
 import Spojnica from "./spojnica.js";
 import state from "./index.js";
@@ -8,6 +8,8 @@ class Home {
     this.state = {
       ...data,
     };
+
+    this.currentSet = data.setovi[0].id;
 
     this.handleNewTag = this.handleNewTag.bind(this);
     // this.handleTagDelete = this.handleTagDelete.bind(this);
@@ -20,7 +22,7 @@ class Home {
     const newTag = inputElement.value;
     inputElement.value = "";
 
-    fetch(getApiURL() + "Tag/DodajTag", {
+    fetch(getApiURL() + "Tag/DodajTag/" + this.currentSet, {
       method: "post",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -83,7 +85,7 @@ class Home {
     const newAnswer = inputElementAnswer.value;
     inputElementAnswer.value = "";
 
-    fetch(getApiURL() + "Pitanje/DodajPitanje", {
+    fetch(getApiURL() + "Pitanje/DodajPitanje/" + this.currentSet, {
       method: "post",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -316,7 +318,7 @@ class Home {
     newBtn.style.marginBottom = "15px";
     newBtn.addEventListener("click", () => {
       const newSpojnica = new Spojnica();
-      newSpojnica.novaSpojnica();
+      newSpojnica.novaSpojnica(this.currentSet);
     });
 
     actions.appendChild(newBtn);
@@ -345,11 +347,49 @@ class Home {
     });
   }
 
+  handleSetChange = (setId) => {
+    this.currentSet = setId;
+    fetchAllDataInSet(setId, ({ tagovi, pitanja, spojnice }) => {
+      this.state.tagovi = tagovi;
+      this.state.pitanja = pitanja;
+      this.state.spojnice = spojnice;
+      /* Azuriramo i globalni state jer se on koristi unutar spojnica */
+      state.tagovi = tagovi;
+      state.pitanja = pitanja;
+      state.spojnice = spojnice;
+
+      this.render();
+    });
+  };
+
+  renderSets = () => {
+    let container = document.querySelector(".homeContainer");
+    let setsContainer = document.createElement("div");
+    setsContainer.className = "setsContainer";
+
+    const sets = this.state.setovi;
+    sets.forEach((set) => {
+      const setElement = document.createElement("div");
+      const isSelected = this.currentSet === set.id;
+      setElement.className = `setButton button ${
+        isSelected ? "correctQuestion" : ""
+      }`;
+      setElement.innerHTML = (isSelected ? "" : "🟠") + set.title;
+      setElement.onclick = () => {
+        this.handleSetChange(set.id);
+      };
+      setsContainer.appendChild(setElement);
+    });
+
+    container.appendChild(setsContainer);
+  };
+
   render() {
     let container = document.querySelector(".homeContainer");
     if (!container) {
       container = document.createElement("div");
     }
+    document.body.appendChild(container);
     container.innerHTML = "";
     container.className = "homeContainer";
 
@@ -366,14 +406,14 @@ class Home {
 
     const submitButton = document.createElement("button");
     submitButton.className = "button submitButton";
-    submitButton.innerHTML = "Pretraži";
+    submitButton.innerHTML = "🔎 Pretraži";
     submitButton.addEventListener("click", this.fetchSpojniceByString);
 
     searchContainer.appendChild(searchInput);
     searchContainer.appendChild(submitButton);
     container.appendChild(searchContainer);
+    this.renderSets();
     container.appendChild(contentContainer);
-    document.body.appendChild(container);
 
     this.renderSpojnice();
     this.renderQuestions();

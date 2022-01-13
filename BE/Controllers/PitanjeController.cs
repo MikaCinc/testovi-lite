@@ -61,7 +61,7 @@ namespace WebAPI.Controllers
             return Ok(pitanje[0]);
         }
 
-        [Route("DodajPitanje/setId")]
+        [Route("DodajPitanje/{setId}")]
         [HttpPost]
         public async Task<ActionResult> DodajPitanje([FromBody] Pitanje pitanje, int setId)
         {
