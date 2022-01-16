@@ -87,6 +87,7 @@
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
 .questionText {
@@ -139,16 +140,33 @@
     border-radius: 15px;
     padding: 10px;
     margin-bottom: 15px;
+    max-width: 250px;
+    box-sizing: border-box;
 }
 
 .newSpojnicaBtn {
     margin-bottom: 10px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     .homeContentContainer {
         flex-direction: column-reverse !important;
         justify-content: center !important;
         align-items: center !important;
+    }
+
+    .questionsContainer, .tagsContainer, .settingsContainer {
+        width: 95% !important;
+        max-width: 100% !important;
+    }
+
+    .singleSpojnicaContainer {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .singleQuestionContainer {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }

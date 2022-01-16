@@ -374,6 +374,7 @@ class Spojnica {
     select.options.add(new Option("🔺1", 1, this.priority === 1, false));
     select.options.add(new Option("🔺2", 2, this.priority === 2, false));
     select.options.add(new Option("🔺3", 3, this.priority === 3, false));
+    select.options.selectedIndex = this.priority - 1;
     select.onchange = () => {
       if (!!select.value) {
         this.priority = +select.value;
@@ -483,7 +484,13 @@ class Spojnica {
 
     const noOfGamesP = document.createElement("p");
     noOfGamesP.className = "questionText";
-    noOfGamesP.innerHTML = "▶️ " + this.numberOfGames + " 🔺" + this.priority + " ❓" + this.questions.length;
+    noOfGamesP.innerHTML =
+      "▶️ " +
+      this.numberOfGames +
+      " 🔺" +
+      this.priority +
+      " ❓" +
+      this.questions.length;
     spojnicaElement.appendChild(noOfGamesP);
 
     const openButton = document.createElement("button");

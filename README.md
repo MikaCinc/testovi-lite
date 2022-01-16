@@ -75,6 +75,8 @@ koje sadrže taj tag.
 
 ## Ostale funkcionalnosti
 
+Homepage je u potpunosti responzivan i prilagodljiv promeni širine prozora.
+
 Osim filtriranja po tagovima, moguće je i pretraživanje spojnica po imenu.
 Search box se nalazi na vrhu homepage-a. Unošenjem pojma i klikom na dugme "Pretraži" poziva se posebna metoda iz SearchController-a i preuzimaju se sve spojnice koje sadrže taj termin u svom imenu.
 
