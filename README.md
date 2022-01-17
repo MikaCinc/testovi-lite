@@ -4,7 +4,7 @@
 
 ## [Testovi - Full edition](https://testovi-inc.netlify.app/)
 
-## [Mihajlo - Portfolio](https://mikacinc.github.io/portfolio)
+## [Mihajlo - Portfolio](http://www.mihajlo.tech)
 
 Testovi Lite sadrže 4 glavna entiteta:
 
