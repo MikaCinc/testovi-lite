@@ -2,9 +2,9 @@
 
 ![Homepage](Slike/home.jpg)
 
-## [Testovi - Full edition](https://testovi-inc.netlify.app/)
+## [Testovi - Full edition](https://testovi.mihajlo.tech)
 
-## [Mihajlo - Portfolio](http://www.mihajlo.tech)
+## [Mihajlo - Portfolio](https://www.mihajlo.tech)
 
 Testovi Lite sadrže 4 glavna entiteta:
 
